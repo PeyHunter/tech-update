@@ -1,0 +1,79 @@
+# The nightly research run (SPEC 5): read state, run Claude Code headless, validate, POST to web.
+# Start one by hand: kubectl -n tech-update create job --from=cronjob/researcher manual-$(date +%s)
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: researcher
+spec:
+  schedule: "30 3 * * *"
+  timeZone: Europe/Copenhagen
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 5
+  jobTemplate:
+    spec:
+      # A broken run fails once and waits for tomorrow, so it can't burn the usage limit.
+      backoffLimit: 0
+      activeDeadlineSeconds: 2400
+      template:
+        metadata:
+          labels:
+            app: researcher
+        spec:
+          restartPolicy: Never
+          automountServiceAccountToken: false
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+            - name: researcher
+              image: ghcr.io/peyhunter/tech-update-researcher
+              env:
+                - name: WEB_INTERNAL_URL
+                  value: http://web.tech-update.svc:3001
+                - name: RESEARCHER_BACKEND
+                  value: claude-code
+                - name: OUT_DIR
+                  value: /out
+                - name: X_API_ENABLED
+                  value: "false"
+                - name: INGEST_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: tech-update-tokens
+                      key: INGEST_TOKEN
+              # CLAUDE_CODE_OAUTH_TOKEN and/or ANTHROPIC_API_KEY. Optional so the CronJob syncs before the secret exists.
+              envFrom:
+                - secretRef:
+                    name: researcher-auth
+                    optional: true
+              resources:
+                requests:
+                  cpu: 200m
+                  memory: 512Mi
+                limits:
+                  memory: 1Gi
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop: [ALL]
+              # Claude Code keeps its config in $HOME; result.json goes to /out.
+              volumeMounts:
+                - name: out
+                  mountPath: /out
+                - name: home
+                  mountPath: /home/node
+                - name: tmp
+                  mountPath: /tmp
+          volumes:
+            - name: out
+              emptyDir: {}
+            - name: home
+              emptyDir: {}
+            - name: tmp
+              emptyDir: {}
