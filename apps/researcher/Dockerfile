@@ -10,7 +10,7 @@ COPY apps/web/package.json apps/web/
 COPY apps/researcher/package.json apps/researcher/
 
 FROM base AS build
-RUN npm ci -w @tech-update/researcher -w @tech-update/shared
+RUN npm ci --ignore-scripts -w @tech-update/researcher -w @tech-update/shared
 COPY tsconfig.base.json ./
 COPY packages/shared packages/shared
 COPY apps/researcher apps/researcher
@@ -18,7 +18,7 @@ RUN npm run build -w @tech-update/shared && npm run build -w @tech-update/resear
 
 FROM base AS deps
 # The mkdirs let the runtime stage copy workspace node_modules even when npm hoisted everything.
-RUN npm ci --omit=dev -w @tech-update/researcher -w @tech-update/shared \
+RUN npm ci --ignore-scripts --omit=dev -w @tech-update/researcher -w @tech-update/shared \
  && mkdir -p packages/shared/node_modules apps/researcher/node_modules
 
 FROM node:24-bookworm-slim
