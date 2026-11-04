@@ -1,0 +1,265 @@
+{
+  "run": {
+    "started_at": "2026-11-04T00:00:00Z",
+    "backend": "claude-code",
+    "notes": "First 30-day run. Checked HN, GitHub trending, HF papers and lab pages for Anthropic, Google, Mistral, Moonshot and OpenAI (developer docs only, openai.com returned 403). site:x.com searches found no watch-list posts, so no heat bumps were applied."
+  },
+  "items": [
+    {
+      "slug": "2026-10-07-claude-haiku-5-5",
+      "date": "2026-10-07",
+      "kind": "try",
+      "title": "Claude Haiku 5.5: Anthropic's cheapest small model, now with an effort setting",
+      "summary": "Anthropic released Claude Haiku 5.5 on Oct 7. It is the first Haiku with adjustable effort. For prompts up to 100k tokens it costs $0.10 input and $0.50 output per million tokens, 90% below Haiku 4.5.",
+      "why": "A cheap, capable small model changes the math for subagents, classification, summaries and compaction. You can run many more calls for the same budget and pair it with Opus 5.5 or Sonnet 5.5 as a worker model.",
+      "how_to_try": "Call the Claude API with model \"claude-haiku-5-5\". It is also on AWS, Google Cloud and Microsoft Azure.",
+      "heat": 4,
+      "links": [
+        { "label": "Introducing Claude Haiku 5.5", "url": "https://www.anthropic.com/claude-haiku-5-5", "is_primary": true }
+      ],
+      "mentions": [
+        { "account_handle": null, "source": "hn", "url": "https://hn.algolia.com/api/v1/search?query=Haiku%205.5&tags=story", "metric": "1049 points" }
+      ]
+    },
+    {
+      "slug": "2026-10-13-gemini-4-argon-gemini-app",
+      "date": "2026-10-13",
+      "kind": "try",
+      "title": "Gemini 4 Argon arrives in the Gemini app for AI Pro and Ultra subscribers",
+      "summary": "On Oct 13 Google made Gemini 4 Argon available in the Gemini app for Google AI Pro and Ultra subscribers. Google says it reasons better, hedges less and gives clearer progress updates on long tasks.",
+      "why": "Google's newest frontier model is now in a mainstream product, with a chat-to-tasks toggle that keeps tasks running while you are away and connections to more than 40 apps. Worth testing against Claude and GPT on your own work.",
+      "how_to_try": "Open the Gemini app on a Google AI Pro or Ultra plan. Gemini 4 Argon is available there.",
+      "heat": 4,
+      "links": [
+        { "label": "Gemini 4 Argon availability (Google blog)", "url": "https://blog.google/innovation-and-ai/products/gemini-app/gemini-4-availability", "is_primary": true }
+      ],
+      "mentions": [
+        { "account_handle": null, "source": "hn", "url": "https://hn.algolia.com/api/v1/search?query=Gemini%204%20Argon&tags=story", "metric": "1467 points" }
+      ]
+    },
+    {
+      "slug": "2026-10-26-gpt-6-1-terra",
+      "date": "2026-10-26",
+      "kind": "try",
+      "title": "OpenAI ships GPT-6.1 Terra, a cheaper model for computer use and vision",
+      "summary": "OpenAI released GPT-6.1 Terra on Oct 26. The API model gpt-6.1-terra costs $1 input and $5 output per million tokens and has a 1,050,000-token context window.",
+      "why": "Terra targets visual reasoning, precise computer use and writing at a mid-tier price. For agents that click through UIs or read screenshots, it is a cheaper option to test against larger models.",
+      "how_to_try": "Call the OpenAI API with model \"gpt-6.1-terra\".",
+      "heat": 4,
+      "links": [
+        { "label": "OpenAI API changelog", "url": "https://developers.openai.com/api/docs/changelog", "is_primary": true },
+        { "label": "GPT-6.1 Terra model docs", "url": "https://developers.openai.com/api/docs/models/gpt-6.1-terra", "is_primary": true }
+      ],
+      "mentions": [
+        { "account_handle": null, "source": "hn", "url": "https://hn.algolia.com/api/v1/search?query=GPT-6.1%20Terra&tags=story", "metric": "637 points" }
+      ]
+    },
+    {
+      "slug": "2026-10-23-kimi-k3-1-pro",
+      "date": "2026-10-23",
+      "kind": "try",
+      "title": "Kimi K3.1 Pro: Moonshot's 2.8T open-weight model, weights now on Hugging Face",
+      "summary": "Moonshot launched Kimi K3.1 Pro in its apps and API on Oct 23 and has now published the weights. It is a mixture-of-experts model with 2.8T total and 104B active parameters and a 1M-token context.",
+      "why": "Moonshot reports 65.7 on Terminal-Bench 4.0 against 66.4 for Claude Opus 5.5, so open weights are now close to the frontier on agentic coding. The license is custom, so read it before commercial use.",
+      "how_to_try": "Use model \"kimi-k3.1-pro\" on platform.kimi.ai, or self-host with: vllm serve \"moonshotai/Kimi-K3.1-Pro\"",
+      "heat": 4,
+      "links": [
+        { "label": "Kimi K3.1 Pro announcement", "url": "https://www.kimi.ai/blog/kimi-k3-1-pro", "is_primary": true },
+        { "label": "Model weights on Hugging Face", "url": "https://huggingface.co/moonshotai/Kimi-K3.1-Pro", "is_primary": true }
+      ],
+      "mentions": [
+        { "account_handle": null, "source": "hn", "url": "https://hn.algolia.com/api/v1/search?query=Kimi%20K3.1&tags=story", "metric": "1096 points" },
+        { "account_handle": null, "source": "hn", "url": "https://hn.algolia.com/api/v1/search?tags=front_page", "metric": "292 points" }
+      ]
+    },
+    {
+      "slug": "2026-10-29-mistral-large-4-open-weights",
+      "date": "2026-10-29",
+      "kind": "try",
+      "title": "Mistral releases open weights for Mistral Large 4, a 1T-parameter model",
+      "summary": "On Oct 29 Mistral published weights for an improved Mistral Large 4, after a public preview earlier in October. The 1T-parameter multimodal model got about three more weeks of RL on coding and defensive security.",
+      "why": "Mistral reports 41% on Terminal-Bench 4.0, up 13 points from the preview, and 84.5% on BrowseComp. It is a large open-weight option from Europe, but companies selling it as a hosted service need a separate commercial license.",
+      "how_to_try": "Download mistralai/Mistral-Large-4-1T-A52B from Hugging Face and serve it with vLLM or SGLang, or call it through the Mistral API or OpenRouter.",
+      "heat": 4,
+      "links": [
+        { "label": "Mistral Large 4 open weights", "url": "https://mistral.ai/news/mistral-large-4-oss/", "is_primary": true },
+        { "label": "Weights on Hugging Face", "url": "https://huggingface.co/mistralai/Mistral-Large-4-1T-A52B", "is_primary": false },
+        { "label": "Mistral Large 4 launch post", "url": "https://mistral.ai/news/mistral-large-4/", "is_primary": false }
+      ],
+      "mentions": [
+        { "account_handle": null, "source": "hn", "url": "https://hn.algolia.com/api/v1/search?query=Mistral%20Large%204&tags=story", "metric": "1731 points" }
+      ]
+    },
+    {
+      "slug": "2026-10-21-php2shell-ai-found-php-rce",
+      "date": "2026-10-21",
+      "kind": "news",
+      "title": "PHP2Shell: AI-assisted research finds critical remote code execution in PHP",
+      "summary": "On Oct 21 PHP shipped fixes for CVE-2026-109618 and CVE-2026-109619, two bugs that can let an unauthenticated attacker run code on PHP servers. Calif, OpenAI and Wiz found them, with AI agents helping along the way.",
+      "why": "An old out-of-memory crash, reported in 2024, became a working exploit with AI help. Expect more old code to get this treatment. If you run PHP, patch now. If you maintain old code, plan for AI-driven audits.",
+      "how_to_try": "Upgrade to PHP 8.5.12, 8.4.27, 8.3.36 or 8.2.35.",
+      "heat": 4,
+      "links": [
+        { "label": "PHP Foundation security release", "url": "https://thephp.foundation/blog/2026/10/21/todays-php-security-release-and-how-were-strengthening-php-security/", "is_primary": true },
+        { "label": "Calif write-up", "url": "https://calif.io/php2shell/", "is_primary": true },
+        { "label": "IEEE Spectrum coverage", "url": "https://spectrum.ieee.org/ai-in-cybersecurity-php2shell-vulnerability", "is_primary": false }
+      ],
+      "mentions": [
+        { "account_handle": null, "source": "hn", "url": "https://hn.algolia.com/api/v1/search?query=PHP2Shell&tags=story", "metric": "455 points" },
+        { "account_handle": null, "source": "hn", "url": "https://hn.algolia.com/api/v1/search?tags=front_page", "metric": "969 points" }
+      ]
+    },
+    {
+      "slug": "2026-10-25-postman-auto-installs-ai-plugins",
+      "date": "2026-10-25",
+      "kind": "news",
+      "title": "Postman reportedly auto-installs AI agent plugins for Codex and Claude Code",
+      "summary": "A GitHub issue opened Oct 25 reports that Postman desktop 12.33.4 on macOS installed Codex and Claude Code plugins, a startup hook and a CLI without asking. No Postman reply appears in the thread.",
+      "why": "Apps that write into your agent config can steer every agent session. Check your Codex and Claude Code plugin and hook settings for entries you did not add, and treat agent hooks as a trust boundary.",
+      "how_to_try": null,
+      "heat": 4,
+      "links": [
+        { "label": "GitHub issue #14370", "url": "https://github.com/postmanlabs/postman-app-support/issues/14370", "is_primary": true }
+      ],
+      "mentions": [
+        { "account_handle": null, "source": "hn", "url": "https://hn.algolia.com/api/v1/search_by_date?query=AI&numericFilters=points>150", "metric": "1478 points" }
+      ]
+    },
+    {
+      "slug": "2026-10-22-agent-skills-agentic-ai-foundation",
+      "date": "2026-10-22",
+      "kind": "news",
+      "title": "Anthropic donates Agent Skills to the Linux Foundation's Agentic AI Foundation",
+      "summary": "On Oct 22 Anthropic gave the Agent Skills standard, the SKILL.md folder format, to the Agentic AI Foundation, which already hosts MCP. Engineers from Anthropic, Google, OpenAI and others will maintain it.",
+      "why": "Skills already work in more than 70 agent platforms, including ChatGPT, Cursor, GitHub Copilot and VS Code. Neutral governance makes it safer to write a skill once and reuse it across tools.",
+      "how_to_try": "Read the spec at agentskills.io, then add a folder with a SKILL.md file to your project.",
+      "heat": 3,
+      "links": [
+        { "label": "Anthropic announcement", "url": "https://www.anthropic.com/news/donating-agent-skills-to-the-agentic-ai-foundation", "is_primary": true },
+        { "label": "Agent Skills spec", "url": "https://agentskills.io", "is_primary": false }
+      ],
+      "mentions": [
+        { "account_handle": null, "source": "github", "url": "https://github.com/trending?since=weekly", "metric": "anthropics/skills +2,969 stars this week" }
+      ]
+    },
+    {
+      "slug": "2026-11-02-anthropic-flashprove-provable-inference",
+      "date": "2026-11-02",
+      "kind": "news",
+      "title": "Anthropic open-sources FlashProve, a prototype to prove which model gave a response",
+      "summary": "On Nov 2 Anthropic's Frontier Red Team and partners released FlashProve under Apache 2.0. It uses zkSNARK proofs to show a response came from a committed model, at about 110 tokens per second on one H100.",
+      "why": "Today you cannot check that a provider served the model it claims. This is an early path to that. Limits are real: about 70 to 95 times the GPU cost of normal serving, greedy decoding only, and 1,024-token contexts.",
+      "how_to_try": null,
+      "heat": 3,
+      "links": [
+        { "label": "Progress on provable inference", "url": "https://www.anthropic.com/research/provable-inference", "is_primary": true }
+      ],
+      "mentions": [
+        { "account_handle": null, "source": "hn", "url": "https://hn.algolia.com/api/v1/search?tags=front_page", "metric": "149 points" }
+      ]
+    },
+    {
+      "slug": "2026-11-04-ripple-65b-preview",
+      "date": "2026-11-04",
+      "kind": "try",
+      "title": "Ripple-65B Preview: a dense open-weight model aimed at agentic coding",
+      "summary": "Ricursive Intelligence released Ripple-65B Preview on Nov 4 under Apache 2.0. It is a dense 65B model with up to 1M context. The company reports 80.52 on TerminalBench 2.1.",
+      "why": "A 65B dense model is small enough to self-host; the model card says it fits on an NVIDIA DGX Spark. The score is self-reported and the model is a preview, so test it on your own tasks first.",
+      "how_to_try": "Download ricursiveAI/Ripple-65B-Preview from Hugging Face, or try it hosted on Together AI, GMI Cloud or OpenRouter.",
+      "heat": 3,
+      "links": [
+        { "label": "Ripple announcement", "url": "https://www.ricursive.com/ripple", "is_primary": true },
+        { "label": "Weights on Hugging Face", "url": "https://huggingface.co/ricursiveAI/Ripple-65B-Preview", "is_primary": true }
+      ],
+      "mentions": [
+        { "account_handle": null, "source": "hn", "url": "https://hn.algolia.com/api/v1/search?tags=front_page", "metric": "157 points" }
+      ]
+    },
+    {
+      "slug": "2026-11-04-t3-code-v0-1-7",
+      "date": "2026-11-04",
+      "kind": "try",
+      "title": "T3 Code v0.1.7 adds Kiro support, managed policies and shareable thread links",
+      "summary": "T3 Code, the open-source app for running coding agents in parallel, shipped v0.1.7 on Nov 4 with 659 changes from 160 contributors. New: Kiro (beta), managed policies, one-time schedules and shareable thread links.",
+      "why": "T3 Code was one of the fastest-growing repos on GitHub this week. It puts several agent harnesses in one UI, and recent builds work with Claude, OpenCode, Pi and Cursor, which helps if you switch between tools.",
+      "how_to_try": "Download v0.1.7 for your platform from github.com/pingdotgg/t3code/releases.",
+      "heat": 3,
+      "links": [
+        { "label": "T3 Code releases", "url": "https://github.com/pingdotgg/t3code/releases", "is_primary": true }
+      ],
+      "mentions": [
+        { "account_handle": null, "source": "github", "url": "https://github.com/trending?since=weekly", "metric": "12,542 stars this week" }
+      ]
+    },
+    {
+      "slug": "2026-10-13-anthropic-scion-source-control",
+      "date": "2026-10-13",
+      "kind": "news",
+      "title": "Anthropic replaced git in its monorepo with an in-house system called Scion",
+      "summary": "In an Oct 13 post, Anthropic described moving its monorepo from git to Scion, a server-centred version control system, in about five months. Merged changes per day rose from about 2,500 in May to over 30,000 in September.",
+      "why": "Agent-driven coding is pushing commit volume far past what typical git setups handle. Scion is not open source, but the post explains ideas such as sparse checkouts and tiered caches that teams can apply to git.",
+      "how_to_try": null,
+      "heat": 4,
+      "links": [
+        { "label": "Redesigning source control at Anthropic", "url": "https://www.anthropic.com/engineering/redesigning-source-control", "is_primary": true }
+      ],
+      "mentions": [
+        { "account_handle": null, "source": "hn", "url": "https://hn.algolia.com/api/v1/search?query=Anthropic&tags=story&numericFilters=created_at_i>1759622400,points>200", "metric": "900 points" }
+      ]
+    }
+  ],
+  "brief": {
+    "headline": "Open-weight models closed in on the frontier, while AI-found bugs and agent plugins showed new security risks.",
+    "period_label": "6 Oct – 4 Nov 2026",
+    "points": [
+      {
+        "title": "Open-weight models are close to the frontier on agentic coding",
+        "text": "Moonshot's Kimi K3.1 Pro, a 2.8T mixture-of-experts model, reports 65.7 on Terminal-Bench 4.0 against 66.4 for Claude Opus 5.5, and its weights are now on Hugging Face. Mistral released weights for the 1T-parameter Mistral Large 4. Ricursive's dense Ripple-65B Preview is small enough to self-host. All scores are self-reported, and the licenses differ.",
+        "item_slugs": ["2026-10-23-kimi-k3-1-pro", "2026-10-29-mistral-large-4-open-weights", "2026-11-04-ripple-65b-preview"]
+      },
+      {
+        "title": "The big labs competed on price and speed, not only raw power",
+        "text": "Anthropic's Claude Haiku 5.5 costs 90% less than Haiku 4.5 for prompts up to 100k tokens. OpenAI's GPT-6.1 Terra costs $1 in and $5 out per million tokens and targets computer use. Google brought Gemini 4 Argon to the Gemini app for paying subscribers.",
+        "item_slugs": ["2026-10-07-claude-haiku-5-5", "2026-10-26-gpt-6-1-terra", "2026-10-13-gemini-4-argon-gemini-app"]
+      },
+      {
+        "title": "AI is now finding serious bugs in old code",
+        "text": "PHP2Shell turned an old PHP out-of-memory crash into unauthenticated remote code execution, found by Calif, OpenAI and Wiz with AI agents helping along the way. PHP shipped fixes on Oct 21. If you run PHP, upgrade. Expect more old code to get audited this way.",
+        "item_slugs": ["2026-10-21-php2shell-ai-found-php-rce"]
+      },
+      {
+        "title": "Agent configs are a new trust boundary",
+        "text": "A GitHub issue with 1478 HN points reports that Postman's desktop app installed Codex and Claude Code plugins and a startup hook without asking. Agent hooks and plugins can steer every session, so check what is installed and who put it there.",
+        "item_slugs": ["2026-10-25-postman-auto-installs-ai-plugins"]
+      },
+      {
+        "title": "Skills and multi-agent apps are where developers are building",
+        "text": "Anthropic gave the Agent Skills standard to the Linux Foundation's Agentic AI Foundation, next to MCP. Skill repos filled GitHub trending, and T3 Code, an app for running several coding agents side by side, shipped a large v0.1.7 release.",
+        "item_slugs": ["2026-10-22-agent-skills-agentic-ai-foundation", "2026-11-04-t3-code-v0-1-7"]
+      },
+      {
+        "title": "Agent workloads strain infrastructure and raise trust questions",
+        "text": "Anthropic replaced git in its monorepo after merged changes per day passed 30,000. It also released FlashProve, an early prototype that uses cryptographic proofs to show which model produced a response. FlashProve is still far too slow and limited for production use.",
+        "item_slugs": ["2026-10-13-anthropic-scion-source-control", "2026-11-02-anthropic-flashprove-provable-inference"]
+      }
+    ]
+  },
+  "rejected": [
+    { "title": "OpenAI to acquire Pierre Computer Company", "reason": "no primary source (openai.com returned 403)" },
+    { "title": "Tencent Hy4", "reason": "no primary source (page had no content)" },
+    { "title": "Anthropic files S-1 for proposed IPO", "reason": "funding only" },
+    { "title": "Geoffrey Hinton: we might be better off without AI", "reason": "opinion thread" },
+    { "title": "Tell HN: Gemini trains on chat history for subscribers", "reason": "no primary source" },
+    { "title": "Google will turn off search for schools that reject AI", "reason": "no primary source" },
+    { "title": "US tech giants' hidden AI debt swells to $3.2T", "reason": "funding only" },
+    { "title": "Oracle files to sell $20B in stock and bonds for AI buildout", "reason": "funding only" },
+    { "title": "Subvocal silent-speech glasses (Show HN)", "reason": "not usable yet, preorders only" },
+    { "title": "North Korean fake job interview led to Binance heist", "reason": "crypto" },
+    { "title": "pbakaus/impeccable design skill for coding agents", "reason": "no release date found" },
+    { "title": "JetBrains ThinkRail agentic IDE", "reason": "no release date found" },
+    { "title": "Anthropic Cyber Mission and OSS Scanner", "reason": "too small" },
+    { "title": "Mistral Voxtral 3 speech models", "reason": "too small" },
+    { "title": "OpenCode v2.2 releases", "reason": "too small" },
+    { "title": "Grok Voice 3.0", "reason": "no primary source" }
+  ]
+}
