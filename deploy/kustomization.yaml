@@ -1,0 +1,21 @@
+# Argo CD syncs this folder (prune + selfHeal).
+# Secrets this folder reads, never committed (create them as Sealed Secrets):
+#   tech-update-tokens: INGEST_TOKEN, ADMIN_TOKEN
+#   researcher-auth:    CLAUDE_CODE_OAUTH_TOKEN (from `claude setup-token`) or ANTHROPIC_API_KEY
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: tech-update
+resources:
+  - namespace.yaml
+  - storage.yaml
+  - web.yaml
+  - ingress.yaml
+  - researcher.yaml
+  - backup.yaml
+  - network-policy.yaml
+# CI rewrites each newTag to the sha-<commit> it just pushed.
+images:
+  - name: ghcr.io/peyhunter/tech-update-web
+    newTag: "sha-0000000"
+  - name: ghcr.io/peyhunter/tech-update-researcher
+    newTag: "sha-0000000"

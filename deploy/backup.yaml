@@ -1,0 +1,74 @@
+# Daily online copy of the database (better-sqlite3 .backup) to the backups volume; files older than 14 days are deleted.
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: backup
+spec:
+  schedule: "30 4 * * *"
+  timeZone: Europe/Copenhagen
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      activeDeadlineSeconds: 600
+      template:
+        metadata:
+          labels:
+            app: backup
+        spec:
+          restartPolicy: Never
+          automountServiceAccountToken: false
+          # Both volumes are ReadWriteOnce local-path, so the job must run on the node that holds web's data.
+          affinity:
+            podAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                - topologyKey: kubernetes.io/hostname
+                  labelSelector:
+                    matchLabels:
+                      app: web
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+            - name: backup
+              # Same image as web; the working directory is /app/apps/web.
+              image: ghcr.io/peyhunter/tech-update-web
+              command: [node, dist/backup.js]
+              env:
+                - name: DATA_DIR
+                  value: /data
+                - name: BACKUP_DIR
+                  value: /backups
+              resources:
+                requests:
+                  cpu: 20m
+                  memory: 64Mi
+                limits:
+                  memory: 128Mi
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop: [ALL]
+              volumeMounts:
+                - name: data
+                  mountPath: /data
+                - name: backups
+                  mountPath: /backups
+                - name: tmp
+                  mountPath: /tmp
+          volumes:
+            - name: data
+              persistentVolumeClaim:
+                claimName: data
+            - name: backups
+              persistentVolumeClaim:
+                claimName: backups
+            - name: tmp
+              emptyDir: {}

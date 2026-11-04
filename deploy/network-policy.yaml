@@ -1,0 +1,54 @@
+# The researcher runs model-driven web fetches, so it may reach only DNS, web's ingest port and the public internet.
+# The private ranges stay closed: no cluster, home network or Tailscale. k3s enforces this with kube-router.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: researcher
+spec:
+  podSelector:
+    matchLabels:
+      app: researcher
+  policyTypes: [Ingress, Egress]
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+      ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+    - to:
+        - podSelector:
+            matchLabels:
+              app: web
+      ports:
+        - port: 3001
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except: [10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 100.64.0.0/10]
+      ports:
+        - port: 443
+        - port: 80
+---
+# Anyone (Traefik, kubelet probes) may reach the public port; only the researcher may reach the ingest port.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: web
+spec:
+  podSelector:
+    matchLabels:
+      app: web
+  policyTypes: [Ingress]
+  ingress:
+    - ports:
+        - port: 3000
+    - from:
+        - podSelector:
+            matchLabels:
+              app: researcher
+      ports:
+        - port: 3001

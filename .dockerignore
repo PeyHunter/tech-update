@@ -1,0 +1,13 @@
+.git
+.github
+.claude
+.peystack
+**/node_modules
+**/dist
+deploy
+docs
+out
+*.db
+*.db-*
+.env
+.env.*

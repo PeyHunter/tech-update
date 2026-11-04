@@ -1,0 +1,34 @@
+# Sends plain http visitors to https.
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: redirect-https
+spec:
+  redirectScheme:
+    scheme: https
+    permanent: true
+---
+# Public hostname. cert-manager issues the certificate; external-dns creates the Cloudflare record from the host.
+# Only the http port is routed, so /api/internal/* is reachable only inside the cluster.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: web
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/router.middlewares: tech-update-redirect-https@kubernetescrd
+spec:
+  tls:
+    - hosts: [tech-update.peytonhunter.com]
+      secretName: tech-update-tls
+  rules:
+    - host: tech-update.peytonhunter.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: web
+                port:
+                  name: http

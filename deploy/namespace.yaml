@@ -1,0 +1,5 @@
+# Everything for tech-update lives in one namespace, so it can be removed in one go.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tech-update
