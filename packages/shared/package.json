@@ -1,0 +1,29 @@
+{
+  "name": "@tech-update/shared",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "result.json schema and types. Consumers import the built dist: `npm install` builds it (prepare); after editing src run `npm run build -w @tech-update/shared` or keep `npm run dev -w @tech-update/shared` (tsc --watch) open.",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "dev": "tsc -p tsconfig.build.json --watch",
+    "prepare": "tsc -p tsconfig.build.json",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.0"
+  }
+}

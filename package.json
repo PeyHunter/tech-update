@@ -2,11 +2,25 @@
   "name": "tech-update",
   "private": true,
   "type": "module",
-  "workspaces": ["packages/*", "apps/*"],
-  "engines": { "node": ">=24" },
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "engines": {
+    "node": ">=24"
+  },
   "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "pretest": "npm run build -w @tech-update/shared",
     "test": "npm test --workspaces --if-present",
-    "typecheck": "npm run typecheck --workspaces --if-present",
-    "build": "npm run build --workspaces --if-present"
+    "pretypecheck": "npm run build -w @tech-update/shared",
+    "typecheck": "npm run typecheck --workspaces --if-present"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2"
+  },
+  "allowScripts": {
+    "esbuild": true,
+    "better-sqlite3": false
   }
 }
