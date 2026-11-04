@@ -1,0 +1,7 @@
+.peystack/
+node_modules/
+dist/
+*.db
+*.db-*
+.env
+out/
