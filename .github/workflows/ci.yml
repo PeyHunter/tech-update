@@ -1,0 +1,97 @@
+name: CI
+
+# Every push and PR: test, then build both images. Push to main also pushes the images to GHCR as
+# sha-<commit> and latest, then writes the new tag into deploy/kustomization.yaml for Argo CD to sync.
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - README.md
+      - docs/**
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  PUBLISH: ${{ github.ref == 'refs/heads/main' && github.event_name != 'pull_request' }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm run typecheck
+      - run: npm test
+
+  images:
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      matrix:
+        image: [web, researcher]
+    steps:
+      - uses: actions/checkout@v7
+      - id: tag
+        run: echo "tag=sha-${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+      - uses: docker/setup-buildx-action@v4
+      - if: env.PUBLISH == 'true'
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: apps/${{ matrix.image }}/Dockerfile
+          push: ${{ env.PUBLISH == 'true' }}
+          tags: |
+            ghcr.io/peyhunter/tech-update-${{ matrix.image }}:${{ steps.tag.outputs.tag }}
+            ghcr.io/peyhunter/tech-update-${{ matrix.image }}:latest
+          cache-from: type=gha,scope=${{ matrix.image }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.image }}
+
+  deploy:
+    needs: images
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    concurrency:
+      group: deploy
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v7
+      - name: Point deploy/ at the new images
+        run: |
+          tag="sha-${GITHUB_SHA::7}"
+          for name in tech-update-web tech-update-researcher; do
+            yq -i "(.images[] | select(.name == \"ghcr.io/peyhunter/${name}\")).newTag = \"${tag}\"" deploy/kustomization.yaml
+          done
+          git diff --stat
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add deploy/kustomization.yaml
+          if git diff --cached --quiet; then
+            echo "Tags already current."
+            exit 0
+          fi
+          git commit -m "deploy: sha-${GITHUB_SHA::7} [skip ci]"
+          git pull --rebase origin main
+          git push origin HEAD:main

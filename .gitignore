@@ -6,3 +6,4 @@ dist/
 .env
 out/
 .claude/
+apps/web/preview-out/
