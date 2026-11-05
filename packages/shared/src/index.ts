@@ -20,10 +20,26 @@ const handle = z
   .transform((s) => s.replace(/^@/, "").toLowerCase())
   .pipe(z.string().regex(/^[a-z0-9_]{1,30}$/, { error: "must be a handle: letters, digits, underscore" }));
 
+/** True for search, API, front-page and trending URLs, which list many posts and so cannot identify one. */
+export function isListingUrl(raw: string): boolean {
+  let u: URL;
+  try {
+    u = new URL(raw);
+  } catch {
+    return false;
+  }
+  const host = u.hostname.toLowerCase().replace(/^www\./, "");
+  const path = u.pathname.toLowerCase().replace(/\/+$/, "");
+  if (host === "hn.algolia.com") return true;
+  if (host === "github.com" && (path === "/trending" || path.startsWith("/trending/"))) return true;
+  if (host === "news.ycombinator.com") return !(path === "/item" && u.searchParams.has("id"));
+  return /\/search(\/|_|$)/.test(path);
+}
+
 export const mentionSchema = z.object({
   account_handle: handle.nullable().optional(),
   source: z.enum(SOURCES),
-  url: httpsUrl,
+  url: httpsUrl.refine((u) => !isListingUrl(u), { error: "must link to one post, not a listing page" }),
   metric: z.string().trim().nullable().optional(),
 });
 

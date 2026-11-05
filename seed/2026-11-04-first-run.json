@@ -17,9 +17,7 @@
       "links": [
         { "label": "Introducing Claude Haiku 5.5", "url": "https://www.anthropic.com/claude-haiku-5-5", "is_primary": true }
       ],
-      "mentions": [
-        { "account_handle": null, "source": "hn", "url": "https://hn.algolia.com/api/v1/search?query=Haiku%205.5&tags=story", "metric": "1049 points" }
-      ]
+      "mentions": []
     },
     {
       "slug": "2026-10-13-gemini-4-argon-gemini-app",
@@ -33,9 +31,7 @@
       "links": [
         { "label": "Gemini 4 Argon availability (Google blog)", "url": "https://blog.google/innovation-and-ai/products/gemini-app/gemini-4-availability", "is_primary": true }
       ],
-      "mentions": [
-        { "account_handle": null, "source": "hn", "url": "https://hn.algolia.com/api/v1/search?query=Gemini%204%20Argon&tags=story", "metric": "1467 points" }
-      ]
+      "mentions": []
     },
     {
       "slug": "2026-10-26-gpt-6-1-terra",
@@ -50,9 +46,7 @@
         { "label": "OpenAI API changelog", "url": "https://developers.openai.com/api/docs/changelog", "is_primary": true },
         { "label": "GPT-6.1 Terra model docs", "url": "https://developers.openai.com/api/docs/models/gpt-6.1-terra", "is_primary": true }
       ],
-      "mentions": [
-        { "account_handle": null, "source": "hn", "url": "https://hn.algolia.com/api/v1/search?query=GPT-6.1%20Terra&tags=story", "metric": "637 points" }
-      ]
+      "mentions": []
     },
     {
       "slug": "2026-10-23-kimi-k3-1-pro",
@@ -67,10 +61,7 @@
         { "label": "Kimi K3.1 Pro announcement", "url": "https://www.kimi.ai/blog/kimi-k3-1-pro", "is_primary": true },
         { "label": "Model weights on Hugging Face", "url": "https://huggingface.co/moonshotai/Kimi-K3.1-Pro", "is_primary": true }
       ],
-      "mentions": [
-        { "account_handle": null, "source": "hn", "url": "https://hn.algolia.com/api/v1/search?query=Kimi%20K3.1&tags=story", "metric": "1096 points" },
-        { "account_handle": null, "source": "hn", "url": "https://hn.algolia.com/api/v1/search?tags=front_page", "metric": "292 points" }
-      ]
+      "mentions": []
     },
     {
       "slug": "2026-10-29-mistral-large-4-open-weights",
@@ -86,9 +77,7 @@
         { "label": "Weights on Hugging Face", "url": "https://huggingface.co/mistralai/Mistral-Large-4-1T-A52B", "is_primary": false },
         { "label": "Mistral Large 4 launch post", "url": "https://mistral.ai/news/mistral-large-4/", "is_primary": false }
       ],
-      "mentions": [
-        { "account_handle": null, "source": "hn", "url": "https://hn.algolia.com/api/v1/search?query=Mistral%20Large%204&tags=story", "metric": "1731 points" }
-      ]
+      "mentions": []
     },
     {
       "slug": "2026-10-21-php2shell-ai-found-php-rce",
@@ -104,10 +93,7 @@
         { "label": "Calif write-up", "url": "https://calif.io/php2shell/", "is_primary": true },
         { "label": "IEEE Spectrum coverage", "url": "https://spectrum.ieee.org/ai-in-cybersecurity-php2shell-vulnerability", "is_primary": false }
       ],
-      "mentions": [
-        { "account_handle": null, "source": "hn", "url": "https://hn.algolia.com/api/v1/search?query=PHP2Shell&tags=story", "metric": "455 points" },
-        { "account_handle": null, "source": "hn", "url": "https://hn.algolia.com/api/v1/search?tags=front_page", "metric": "969 points" }
-      ]
+      "mentions": []
     },
     {
       "slug": "2026-10-25-postman-auto-installs-ai-plugins",
@@ -121,9 +107,7 @@
       "links": [
         { "label": "GitHub issue #14370", "url": "https://github.com/postmanlabs/postman-app-support/issues/14370", "is_primary": true }
       ],
-      "mentions": [
-        { "account_handle": null, "source": "hn", "url": "https://hn.algolia.com/api/v1/search_by_date?query=AI&numericFilters=points>150", "metric": "1478 points" }
-      ]
+      "mentions": []
     },
     {
       "slug": "2026-10-22-agent-skills-agentic-ai-foundation",
@@ -138,9 +122,7 @@
         { "label": "Anthropic announcement", "url": "https://www.anthropic.com/news/donating-agent-skills-to-the-agentic-ai-foundation", "is_primary": true },
         { "label": "Agent Skills spec", "url": "https://agentskills.io", "is_primary": false }
       ],
-      "mentions": [
-        { "account_handle": null, "source": "github", "url": "https://github.com/trending?since=weekly", "metric": "anthropics/skills +2,969 stars this week" }
-      ]
+      "mentions": []
     },
     {
       "slug": "2026-11-02-anthropic-flashprove-provable-inference",
@@ -154,9 +136,7 @@
       "links": [
         { "label": "Progress on provable inference", "url": "https://www.anthropic.com/research/provable-inference", "is_primary": true }
       ],
-      "mentions": [
-        { "account_handle": null, "source": "hn", "url": "https://hn.algolia.com/api/v1/search?tags=front_page", "metric": "149 points" }
-      ]
+      "mentions": []
     },
     {
       "slug": "2026-11-04-ripple-65b-preview",
@@ -171,9 +151,7 @@
         { "label": "Ripple announcement", "url": "https://www.ricursive.com/ripple", "is_primary": true },
         { "label": "Weights on Hugging Face", "url": "https://huggingface.co/ricursiveAI/Ripple-65B-Preview", "is_primary": true }
       ],
-      "mentions": [
-        { "account_handle": null, "source": "hn", "url": "https://hn.algolia.com/api/v1/search?tags=front_page", "metric": "157 points" }
-      ]
+      "mentions": []
     },
     {
       "slug": "2026-11-04-t3-code-v0-1-7",
@@ -187,9 +165,7 @@
       "links": [
         { "label": "T3 Code releases", "url": "https://github.com/pingdotgg/t3code/releases", "is_primary": true }
       ],
-      "mentions": [
-        { "account_handle": null, "source": "github", "url": "https://github.com/trending?since=weekly", "metric": "12,542 stars this week" }
-      ]
+      "mentions": []
     },
     {
       "slug": "2026-10-13-anthropic-scion-source-control",
@@ -203,9 +179,7 @@
       "links": [
         { "label": "Redesigning source control at Anthropic", "url": "https://www.anthropic.com/engineering/redesigning-source-control", "is_primary": true }
       ],
-      "mentions": [
-        { "account_handle": null, "source": "hn", "url": "https://hn.algolia.com/api/v1/search?query=Anthropic&tags=story&numericFilters=created_at_i>1759622400,points>200", "metric": "900 points" }
-      ]
+      "mentions": []
     }
   ],
   "brief": {

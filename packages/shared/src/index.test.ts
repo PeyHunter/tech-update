@@ -116,4 +116,30 @@ describe("parseResultFile", () => {
     const r = parseResultFile(file({ items: [item({ mentions })] }));
     expect(r.ok && r.value.items[0]?.mentions[0]?.account_handle).toBe("theo");
   });
+
+  it.each([
+    "https://hn.algolia.com/api/v1/search?tags=front_page",
+    "https://hn.algolia.com/api/v1/search_by_date?query=AI",
+    "https://github.com/trending?since=weekly",
+    "https://github.com/trending/typescript",
+    "https://x.com/search?q=claude",
+    "https://news.ycombinator.com/",
+    "https://news.ycombinator.com/news",
+    "https://www.reddit.com/r/LocalLLaMA/search?q=kimi",
+  ])("rejects listing mention url %s", (url) => {
+    const mentions = [{ source: "hn", url }];
+    expect(errorsOf(file({ items: [item({ mentions })] }))).toEqual([
+      "items[0].mentions[0].url: must link to one post, not a listing page",
+    ]);
+  });
+
+  it.each([
+    "https://news.ycombinator.com/item?id=123",
+    "https://github.com/anthropics/skills",
+    "https://github.com/acme/searchlight/issues/4",
+    "https://x.com/theo/status/1",
+    "https://www.youtube.com/watch?v=abc",
+  ])("accepts single-post mention url %s", (url) => {
+    expect(parseResultFile(file({ items: [item({ mentions: [{ source: "hn", url }] })] })).ok).toBe(true);
+  });
 });

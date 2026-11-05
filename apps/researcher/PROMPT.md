@@ -140,7 +140,7 @@ Rules for each field:
 - `heat`: a whole number from 2 to 5.
 - `how_to_try`: a non-empty string for `try` items; a string or null for `news`.
 - `links`: at least one. Each `label` is 1 to 60 characters. At least one link has `is_primary: true`. Every `url` starts with `https://`.
-- `mentions`: zero or more, one per post or story that talked about the item. `source` is one of `x`, `hn`, `github`, `arxiv`, `lab`, `newsletter`, `youtube`. `account_handle` is the X handle in lowercase without `@` (for example `mattpocockuk`), or null when the mention is not from a person's account. `metric` is a short signal you actually saw, such as `412 points`, or null.
+- `mentions`: zero or more, one per post or story that talked about the item. `source` is one of `x`, `hn`, `github`, `arxiv`, `lab`, `newsletter`, `youtube`. `account_handle` is the X handle in lowercase without `@` (for example `mattpocockuk`), or null when the mention is not from a person's account. `metric` is a short signal you actually saw, such as `412 points`, or null. A mention `url` must be the specific post, thread, video or issue, for example `https://news.ycombinator.com/item?id=123`. Never use a search, API, front-page or trending listing URL. If you only saw the item on a listing, leave the mention out and put that evidence into `heat` instead.
 - `rejected`: things you considered and dropped, each with a short `reason` such as `opinion thread`, `no primary source`, `older than 30 days`, `too small`, `duplicate`, `funding only`.
 
 Before you write the file, check it once against these rules: lengths, slugs, dates, https links, a primary link on every item, `how_to_try` on every `try` item, 5 to 7 brief points, and every cited slug exists.
