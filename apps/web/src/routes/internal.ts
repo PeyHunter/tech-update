@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { bodyLimit } from "hono/body-limit";
 import { z } from "zod";
-import type { StateResponse } from "@tech-update/shared";
+import { WATCHED_REPOS, type StateResponse } from "@tech-update/shared";
 import type { Deps } from "../server.js";
 import { bearer } from "../auth.js";
 import * as repo from "../db/repo.js";
@@ -24,6 +24,7 @@ export function internalRoutes({ db, config }: Deps): Hono {
       last_success_at: repo.lastSuccessAt(db),
       items: repo.stateItems(db, windowStart()),
       accounts: repo.listAccounts(db).map(({ handle, name, description, priority }) => ({ handle, name, description, priority })),
+      repos: WATCHED_REPOS,
     };
     return c.json(state);
   });

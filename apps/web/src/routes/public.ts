@@ -35,7 +35,12 @@ export function publicRoutes(deps: Deps): Hono {
   });
 
   app.get("/sources", (c) => c.html(renderSources(vm.sourcesModel(db, c.req.path))));
-  app.get("/status", (c) => c.html(renderStatus(vm.statusModel(db, c.req.path))));
+  app.get("/status", (c) => c.html(renderStatus(vm.statusModel(db, c.req.path, c.req.query("refresh")))));
+
+  app.post("/refresh", async (c) => {
+    const outcome = deps.refresher ? await deps.refresher.trigger(repo.lastSuccessAt(db)) : "unavailable";
+    return c.redirect(`/status?refresh=${outcome}`, 303);
+  });
 
   app.get("/styles.css", (c) => {
     if (stylesCss === null) return c.text("not found", 404);

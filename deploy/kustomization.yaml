@@ -8,6 +8,7 @@ namespace: tech-update
 resources:
   - namespace.yaml
   - storage.yaml
+  - rbac.yaml
   - web.yaml
   - ingress.yaml
   - researcher.yaml

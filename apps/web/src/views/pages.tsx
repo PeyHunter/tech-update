@@ -232,6 +232,20 @@ export function renderSources(m: SourcesModel): string {
         )}
       </section>
       <section class="prose-section">
+        <h2>GitHub</h2>
+        <p>New commits and releases here are checked every run. A notable change becomes a "Try it" item.</p>
+        <ul class="sources">
+          {m.repos.map((r) => (
+            <li>
+              <strong>
+                <a href={r.url}>{r.name}</a>
+              </strong>{" "}
+              {r.description}
+            </li>
+          ))}
+        </ul>
+      </section>
+      <section class="prose-section">
         <h2>How X is read</h2>
         <p>X cannot be read reliably for free, so the research uses the best source it has and records which one:</p>
         <ol class="steps">
@@ -260,11 +274,24 @@ export function renderSources(m: SourcesModel): string {
 
 const STATUS_LABEL: Record<string, string> = { ok: "OK", partial: "Partial", failed: "Failed" };
 
+const REFRESH_TEXT: Record<NonNullable<StatusModel["refresh"]>, { text: string; ok: boolean }> = {
+  started: { ok: true, text: "Refresh started. New items show up here and on the home page in about 15 minutes." },
+  running: { ok: true, text: "A research run is already going. Its items show up when it finishes." },
+  cooldown: { ok: true, text: "The site was updated or refreshed within the last hour, so it did not start another run. Try again later." },
+  unavailable: { ok: false, text: "Refresh is not set up on this server." },
+  failed: { ok: false, text: "Refresh could not start a run. The nightly run still happens at 03:30." },
+};
+
 export function renderStatus(m: StatusModel): string {
   const last = m.runs[0];
   return doc(
     <Page {...layout(m)}>
       <h1 class="page-title">Status</h1>
+      {m.refresh ? (
+        <p class={REFRESH_TEXT[m.refresh].ok ? "notice" : "notice notice-bad"} role="status">
+          {REFRESH_TEXT[m.refresh].text}
+        </p>
+      ) : null}
       <p class="lede">
         {last
           ? last.status === "failed"

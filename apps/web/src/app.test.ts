@@ -283,8 +283,9 @@ describe("listeners and auth", () => {
     expect((await internal.request("/api/internal/state", { headers: { authorization: "Bearer nope" } })).status).toBe(401);
     const res = await internal.request("/api/internal/state", { headers: { authorization: `Bearer ${INGEST}` } });
     expect(res.status).toBe(200);
-    const state = (await res.json()) as { accounts: unknown[]; last_success_at: unknown };
+    const state = (await res.json()) as { accounts: unknown[]; repos: { url: string }[]; last_success_at: unknown };
     expect(state.accounts).toHaveLength(12);
+    expect(state.repos.map((r) => r.url)).toContain("https://github.com/t3dotgg/tstack");
     expect(state.last_success_at).toBeNull();
   });
 

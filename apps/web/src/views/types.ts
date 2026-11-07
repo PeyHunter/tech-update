@@ -1,4 +1,4 @@
-import type { Kind, Source } from "@tech-update/shared";
+import type { Kind, Source, WatchedRepo } from "@tech-update/shared";
 
 export type ItemView = {
   slug: string;
@@ -42,5 +42,6 @@ export type HomeModel = Layout & {
 export type ItemModel = Layout & { item: ItemView };
 export type ArchiveIndexModel = Layout & { months: { month: string; count: number }[] };
 export type ArchiveMonthModel = Layout & { month: string; brief: BriefView | null; days: HomeModel["days"] };
-export type SourcesModel = Layout & { accounts: AccountView[] };
-export type StatusModel = Layout & { runs: RunView[] };
+export type SourcesModel = Layout & { accounts: AccountView[]; repos: WatchedRepo[] };
+export type RefreshOutcome = "started" | "running" | "cooldown" | "unavailable" | "failed";
+export type StatusModel = Layout & { runs: RunView[]; refresh: RefreshOutcome | null };

@@ -129,6 +129,40 @@ export type StateResponse = {
   last_success_at: string | null;
   items: { slug: string; title: string; date: string; urls: string[] }[];
   accounts: { handle: string; name: string; description: string; priority: "high" | "normal" }[];
+  repos: WatchedRepo[];
 };
+
+/** GitHub places the researcher checks every run, next to the X watch list. `check` is a GitHub API URL it can WebFetch. */
+export type WatchedRepo = { name: string; owner: string; description: string; url: string; check: string };
+export const WATCHED_REPOS: WatchedRepo[] = [
+  {
+    name: "pstack",
+    owner: "poteto",
+    description: "Lauren Tan's agent skill pack in the Cursor plugins repo",
+    url: "https://github.com/cursor/plugins/tree/main/pstack",
+    check: "https://api.github.com/repos/cursor/plugins/commits?path=pstack&per_page=30",
+  },
+  {
+    name: "tstack",
+    owner: "theo",
+    description: "Theo's agent skill pack",
+    url: "https://github.com/t3dotgg/tstack",
+    check: "https://api.github.com/repos/t3dotgg/tstack/commits?per_page=30",
+  },
+  {
+    name: "Matt Pocock on GitHub",
+    owner: "mattpocockuk",
+    description: "Matt's repos, such as skills and sandcastle",
+    url: "https://github.com/mattpocock",
+    check: "https://api.github.com/users/mattpocock/repos?sort=pushed&per_page=15",
+  },
+  {
+    name: "Lauren Tan on GitHub",
+    owner: "poteto",
+    description: "Lauren's own repos",
+    url: "https://github.com/poteto",
+    check: "https://api.github.com/users/poteto/repos?sort=pushed&per_page=15",
+  },
+];
 export type IngestResponse = { run_id: number; added: number; updated: number; rejected: number };
 export type FailedRunRequest = { started_at: string; backend: string; error: string };

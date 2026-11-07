@@ -13,6 +13,7 @@ Read `/out/state.json` before anything else. It contains:
 - `last_success_at`: when the last good run finished, or null.
 - `items`: everything already on the site from the last 30 days, each with `slug`, `title`, `date` and `urls`.
 - `accounts`: the active X watch list, each with `handle`, `name`, `description` and `priority` (`high` or `normal`).
+- `repos`: GitHub places to watch, each with `name`, `owner` (an X handle from `accounts`), `description`, `url` and `check` (a GitHub API URL).
 
 Look for things that happened from `today` minus `lookback_days` up to `today`. Never include anything dated more than 30 days before `today`.
 
@@ -53,7 +54,19 @@ X is hard to read for free, so use these in order:
 
 A post on X is a signal, not a source. Always follow it to the primary source.
 
-## 5. Other sources
+## 5. Watched GitHub repos
+
+Check every entry in `state.json` `repos` on every run. These people ship tools on GitHub before or instead of posting about them.
+
+1. WebFetch the entry's `check` URL. It returns JSON: commits (with `commit.message` and `commit.committer.date`) or repos (with `name`, `description` and `pushed_at`). Only look at things dated inside the lookback window.
+2. For repo lists, open the repos pushed inside the window: `https://api.github.com/repos/<owner>/<repo>/commits?per_page=20` and `https://api.github.com/repos/<owner>/<repo>/releases?per_page=5`.
+3. Group the changes into what a user would notice: a new skill or command, a new release, a new tool, a big behaviour change. Skip typo fixes, tests, refactors, CI and version bumps.
+4. A notable change is a `try` item with heat at least 2. The primary link is the repo, release or the skill's folder on github.com (not the API URL). `how_to_try` is the install or update step from the repo's README, which you must fetch. Add a mention with `source` `github`, `account_handle` set to the entry's `owner`, and the github.com commit or release URL. The watch-list rule then adds 1 heat.
+5. If the same repo already has an item in `state.json` `items` from the last few days, update that item (same slug and date) instead of adding a new one, unless the new change is a separate thing.
+
+If GitHub answers 403 (rate limit), open the entry's `url` on github.com instead and read the latest commits there.
+
+## 6. Other sources
 
 Use these to find stories and to judge heat:
 
@@ -64,7 +77,7 @@ Use these to find stories and to judge heat:
 - AI lab news pages: Anthropic, OpenAI, Google DeepMind, Meta AI, Mistral, xAI, DeepSeek, Qwen, Hugging Face
 - Newsletters that sum up X: The Rundown AI, Ben's Bites, TLDR AI, Latent Space
 
-## 6. Verify everything
+## 7. Verify everything
 
 - Every item needs at least one primary source: the lab's post, the repo, the paper, the product page or the official docs. Mark it `is_primary: true`.
 - You must have fetched the primary source yourself with WebFetch in this run and seen that it says what you write. If you could not fetch it, drop the item and put it in `rejected` with reason `no primary source`.
@@ -72,7 +85,7 @@ Use these to find stories and to judge heat:
 - Every URL must start with `https://`.
 - The item `date` is the day the thing was announced or released, from the source. If you cannot find that date, drop the item.
 
-## 7. Dedupe against the state
+## 8. Dedupe against the state
 
 Before you add an item, compare it with `state.json` `items` (titles and `urls`) and with the other items you are adding.
 
@@ -82,7 +95,7 @@ Before you add an item, compare it with `state.json` `items` (titles and `urls`)
 
 Aim for 5 to 12 new items. Fewer is fine on a quiet day. Never pad the list with weak items.
 
-## 8. Writing style
+## 9. Writing style
 
 Plain English. Short sentences. No hype words such as "revolutionary", "game-changer", "groundbreaking" or "insane". Say what it is, then why it matters. Write for a developer who has five minutes.
 
@@ -91,7 +104,7 @@ Plain English. Short sentences. No hype words such as "revolutionary", "game-cha
 - `why`: why it matters to someone who builds with AI, at most 400 characters.
 - `how_to_try`: the first concrete step, for `try` items. For `news` items, use null unless there really is something to try.
 
-## 9. The monthly brief
+## 10. The monthly brief
 
 Rewrite the brief from every item of the last 30 days: the items in `state.json` plus your new items.
 
@@ -101,7 +114,7 @@ Rewrite the brief from every item of the last 30 days: the items in `state.json`
 
 Set `brief` to null only if there are zero items in total (none in the state and none new).
 
-## 10. Output
+## 11. Output
 
 Write exactly one file, `/out/result.json`, with the Write tool. It must be valid JSON: no comments, no trailing commas, no Markdown fences. Shape:
 
@@ -145,7 +158,7 @@ Rules for each field:
 
 Before you write the file, check it once against these rules: lengths, slugs, dates, https links, a primary link on every item, `how_to_try` on every `try` item, 5 to 7 brief points, and every cited slug exists.
 
-## 11. Finish
+## 12. Finish
 
 After writing the file, print one line and stop, for example:
 

@@ -1,11 +1,16 @@
 import { serve, type ServerType } from "@hono/node-server";
 import { loadConfig } from "./config.js";
 import { openDb } from "./db/migrate.js";
+import { createRefresher, inClusterJobsApi } from "./refresh.js";
 import { createInternalApp, createPublicApp, loadStyles, type Deps } from "./server.js";
 
 const config = loadConfig();
 const db = openDb(config.dbFile);
-const deps: Deps = { db, config, stylesCss: loadStyles() };
+const jobsApi = inClusterJobsApi(process.env);
+const refresher = createRefresher(jobsApi, { cooldownMs: config.refreshCooldownMs });
+const deps: Deps = { db, config, stylesCss: loadStyles(), refresher };
+
+if (!jobsApi) console.warn("no Kubernetes service account: the Refresh button reports unavailable");
 
 if (!config.ingestToken) console.warn("INGEST_TOKEN is not set: internal endpoints return 503");
 if (!config.adminToken) console.warn("ADMIN_TOKEN is not set: admin endpoints return 503");

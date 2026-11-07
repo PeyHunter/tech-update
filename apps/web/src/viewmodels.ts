@@ -1,4 +1,4 @@
-import type { Kind } from "@tech-update/shared";
+import { WATCHED_REPOS, type Kind } from "@tech-update/shared";
 import type { DB } from "./db/migrate.js";
 import * as repo from "./db/repo.js";
 import { today, windowStart, monthOf } from "./time.js";
@@ -130,10 +130,16 @@ export function archiveMonthModel(db: DB, month: string, path: string): ArchiveM
 }
 
 export function sourcesModel(db: DB, path: string): SourcesModel {
-  return { ...layout(db, path, `Sources · ${SITE_TITLE}`), accounts: repo.listAccounts(db).map(toAccountView) };
+  return {
+    ...layout(db, path, `Sources · ${SITE_TITLE}`),
+    accounts: repo.listAccounts(db).map(toAccountView),
+    repos: WATCHED_REPOS,
+  };
 }
 
-export function statusModel(db: DB, path: string): StatusModel {
+const REFRESH_OUTCOMES = ["started", "running", "cooldown", "unavailable", "failed"] as const;
+
+export function statusModel(db: DB, path: string, refresh?: string): StatusModel {
   const runs: RunView[] = repo.listRuns(db, 14).map((r) => ({
     id: r.id,
     started_at: r.started_at,
@@ -148,5 +154,6 @@ export function statusModel(db: DB, path: string): StatusModel {
     items_rejected: r.items_rejected,
     error: r.error,
   }));
-  return { ...layout(db, path, `Status · ${SITE_TITLE}`), runs };
+  const outcome = REFRESH_OUTCOMES.find((o) => o === refresh) ?? null;
+  return { ...layout(db, path, `Status · ${SITE_TITLE}`), runs, refresh: outcome };
 }

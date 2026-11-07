@@ -8,6 +8,7 @@ export type Config = {
   ingestToken: string | undefined;
   adminToken: string | undefined;
   publicUrl: string;
+  refreshCooldownMs: number;
 };
 
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
@@ -19,6 +20,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
     dbFile: join(dataDir, "tech-update.db"),
     ingestToken: env.INGEST_TOKEN || undefined,
     adminToken: env.ADMIN_TOKEN || undefined,
+    refreshCooldownMs: Number(env.REFRESH_COOLDOWN_MIN || 60) * 60_000,
     publicUrl: (env.PUBLIC_URL || "https://tech-update.peytonhunter.com").replace(/\/+$/, ""),
   };
 }

@@ -11,6 +11,10 @@ spec:
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 5
   jobTemplate:
+    # The label lets the web's Refresh button see whether a run is already going.
+    metadata:
+      labels:
+        app: researcher
     spec:
       # A broken run fails once and waits for tomorrow, so it can't burn the usage limit.
       backoffLimit: 0

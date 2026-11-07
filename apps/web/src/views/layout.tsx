@@ -59,6 +59,11 @@ export function Page(props: Layout & { description?: string; children: Child }) 
                 "Not updated yet"
               )}
             </p>
+            <form class="refresh" method="post" action="/refresh">
+              <button type="submit" title="Look for today's news now. It takes about 15 minutes.">
+                Refresh
+              </button>
+            </form>
             <nav class="nav" aria-label="Main">
               <ul>
                 {NAV.map((n) => (
@@ -81,7 +86,7 @@ export function Page(props: Layout & { description?: string; children: Child }) 
         <footer class="colophon">
           <div class="wrap">
             <p>
-              Researched every night from the people and sites on the <a href="/sources">sources</a> page. Times
+              Researched every night, or when someone presses Refresh, from the people, repos and sites on the <a href="/sources">sources</a> page. Times
               are Copenhagen time.
             </p>
           </div>
