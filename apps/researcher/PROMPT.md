@@ -161,7 +161,13 @@ Write exactly one file, `/out/result.json`, with the Write tool. It must be vali
   "brief": {
     "headline": "One sentence on the month.",
     "period_label": "6 Oct – 4 Nov 2026",
-    "points": [{ "title": "Point title", "text": "Two or three plain sentences.", "item_slugs": ["2026-11-02-example-tool"] }]
+    "points": [
+      { "title": "Point 1 title", "text": "Two or three plain sentences.", "item_slugs": ["2026-11-02-example-tool"] },
+      { "title": "Point 2 title", "text": "Two or three plain sentences.", "item_slugs": ["2026-11-02-example-tool"] },
+      { "title": "Point 3 title", "text": "Two or three plain sentences.", "item_slugs": ["2026-11-02-example-tool"] },
+      { "title": "Point 4 title", "text": "Two or three plain sentences.", "item_slugs": ["2026-11-02-example-tool"] },
+      { "title": "Point 5 title", "text": "Two or three plain sentences.", "item_slugs": ["2026-11-02-example-tool"] }
+    ]
   },
   "updates": [
     { "account_handle": "mattpocockuk", "date": "2026-11-03", "source": "x", "text": "Matt shared a free lesson on writing skills for coding agents. He says short, clear steps work better than long rules.", "url": "https://x.com/mattpocockuk/status/123" }
