@@ -1,4 +1,4 @@
-import { mkdtempSync, readdirSync, writeFileSync } from "node:fs";
+import { mkdtempSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import Database from "better-sqlite3";
@@ -138,6 +138,51 @@ describe("ingest", () => {
     expect(count(db, "items")).toBe(1);
     expect(repo.getItemBySlug(db, a.slug)?.heat).toBe(5);
     expect(repo.getLatestBrief(db)?.points[0]?.item_slugs).toEqual([a.slug]);
+  });
+
+  it("merges the same story sent twice in one payload by primary URL", () => {
+    const db = openDb(":memory:");
+    const viaX = item({
+      words: "acme-agent",
+      links: [{ label: "Launch", url: "https://acme.dev/agent", is_primary: true }],
+      mentions: [{ account_handle: "theo", source: "x", url: "https://x.com/theo/status/1" }],
+    });
+    const viaHn = item({
+      words: "acme-agent-launch",
+      title: "Acme ships an agent",
+      links: [{ label: "Blog", url: "https://acme.dev/agent?utm_source=hn", is_primary: true }],
+      mentions: [{ source: "hn", url: "https://news.ycombinator.com/item?id=42" }],
+    });
+    const r = ingest(db, result([viaX, viaHn]));
+    expect(r.ok && r.response).toMatchObject({ added: 1, updated: 0 });
+    const items = db.prepare("SELECT * FROM items").all() as repo.ItemRow[];
+    expect(items).toHaveLength(1);
+    expect(items[0]).toMatchObject({ slug: viaX.slug, title: "Acme ships an agent" });
+    expect(count(db, "item_links")).toBe(1);
+    expect(count(db, "item_mentions")).toBe(2);
+  });
+
+  it("never merges distinct items that share a mention URL, in one payload or across runs", () => {
+    const db = openDb(":memory:");
+    const thread = { source: "hn", url: "https://news.ycombinator.com/item?id=7" };
+    const a = item({ words: "alpha", mentions: [thread] });
+    const b = item({ words: "beta", mentions: [thread] });
+    const c = item({ words: "gamma", mentions: [thread] });
+    ingest(db, result([a, b]));
+    ingest(db, result([c]));
+    const titles = (db.prepare("SELECT title FROM items ORDER BY title").all() as { title: string }[]).map((r) => r.title);
+    expect(titles).toEqual(["Title alpha", "Title beta", "Title gamma"]);
+  });
+
+  it("stores all 12 distinct items from the first-run seed", () => {
+    const db = openDb(":memory:");
+    const seed = JSON.parse(readFileSync(new URL("../../../seed/2026-11-04-first-run.json", import.meta.url), "utf8")) as {
+      items: { slug: string; title: string }[];
+    };
+    const r = ingest(db, seed, { now: new Date("2026-11-04T12:00:00Z") });
+    expect(r.ok && r.response).toMatchObject({ added: 12, updated: 0, rejected: 16 });
+    expect(count(db, "items")).toBe(12);
+    for (const s of seed.items) expect(repo.getItemBySlug(db, s.slug)?.title).toBe(s.title);
   });
 
   it("caps heat at 5, on insert and on merge", () => {

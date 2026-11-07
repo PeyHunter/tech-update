@@ -119,6 +119,10 @@ export function allLinkUrls(db: DB): { item_id: number; url: string }[] {
   return db.prepare("SELECT item_id, url FROM item_links").all() as { item_id: number; url: string }[];
 }
 
+export function allPrimaryLinkUrls(db: DB): { item_id: number; url: string }[] {
+  return db.prepare("SELECT item_id, url FROM item_links WHERE is_primary = 1").all() as { item_id: number; url: string }[];
+}
+
 export function allMentionUrls(db: DB): { item_id: number; url: string }[] {
   return db.prepare("SELECT item_id, url FROM item_mentions").all() as { item_id: number; url: string }[];
 }
