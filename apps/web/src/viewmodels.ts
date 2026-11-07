@@ -1,7 +1,7 @@
-import { WATCHED_REPOS, type Kind } from "@tech-update/shared";
+import { WATCHED_REPOS, type Kind, type Source } from "@tech-update/shared";
 import type { DB } from "./db/migrate.js";
 import * as repo from "./db/repo.js";
-import { today, windowStart, monthOf } from "./time.js";
+import { addDays, today, windowStart, monthOf } from "./time.js";
 import type {
   AccountView,
   ArchiveIndexModel,
@@ -11,6 +11,7 @@ import type {
   ItemModel,
   ItemView,
   Layout,
+  PersonUpdates,
   RunView,
   SourcesModel,
   StatusModel,
@@ -104,11 +105,28 @@ export function homeModel(db: DB, q: { path: string; kind?: string; by?: string 
   const rows = repo.listPublishedItems(db, { since: windowStart(now), kind, by: by ?? undefined });
   return {
     ...layout(db, q.path),
+    following: followingModel(db, now),
     brief: currentBrief(db, now),
     days: groupByDay(toItemViews(db, rows)),
     filter: { kind: kind ?? "all", by },
     people: repo.listAccounts(db, { priority: "high" }).map(toAccountView),
   };
+}
+
+/** Last 7 days of updates, grouped by person, people with the newest update first, at most 3 each. */
+export function followingModel(db: DB, now = new Date()): PersonUpdates[] {
+  const names = new Map(repo.listAccounts(db).map((a) => [a.handle, a.name]));
+  const people = new Map<string, PersonUpdates>();
+  for (const u of repo.listUpdates(db, addDays(today(now), -7))) {
+    const person = people.get(u.account_handle) ?? {
+      handle: u.account_handle,
+      name: names.get(u.account_handle) ?? u.account_handle,
+      updates: [],
+    };
+    if (person.updates.length < 3) person.updates.push({ date: u.date, source: u.source as Source, text: u.text, url: u.url });
+    people.set(u.account_handle, person);
+  }
+  return [...people.values()];
 }
 
 export function itemModel(db: DB, slug: string, path: string): ItemModel | null {

@@ -48,7 +48,7 @@ describe("misc", () => {
 
   it("migrates idempotently and seeds the watch list", () => {
     const db = openDb(":memory:");
-    expect(db.pragma("user_version", { simple: true })).toBe(1);
+    expect(db.pragma("user_version", { simple: true })).toBe(2);
     expect(db.pragma("foreign_keys", { simple: true })).toBe(1);
     const handles = (db.prepare("SELECT handle FROM accounts").all() as { handle: string }[]).map((r) => r.handle);
     expect(handles).toHaveLength(12);

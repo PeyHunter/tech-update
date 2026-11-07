@@ -28,9 +28,8 @@ export function Page(props: Layout & { description?: string; children: Child }) 
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>{fullTitle}</title>
         <meta name="description" content={description} />
-        <meta name="color-scheme" content="light dark" />
-        <meta name="theme-color" content="#f4f6f5" media="(prefers-color-scheme: light)" />
-        <meta name="theme-color" content="#121816" media="(prefers-color-scheme: dark)" />
+        <meta name="color-scheme" content="dark" />
+        <meta name="theme-color" content="#17142b" />
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content={SITE_NAME} />
         <meta property="og:title" content={fullTitle} />
@@ -38,6 +37,12 @@ export function Page(props: Layout & { description?: string; children: Child }) 
         <meta property="og:url" content={`${SITE_URL}${props.path}`} />
         <link rel="canonical" href={`${SITE_URL}${props.path}`} />
         <link rel="alternate" type="application/rss+xml" title={`${SITE_NAME} RSS`} href="/rss.xml" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=JetBrains+Mono:wght@400;500&display=swap"
+        />
         <link rel="stylesheet" href="/styles.css" />
       </head>
       <body>

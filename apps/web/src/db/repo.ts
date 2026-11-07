@@ -309,3 +309,33 @@ export function upsertAccount(db: DB, a: AccountRow): void {
        priority = excluded.priority, active = excluded.active`,
   ).run(a);
 }
+
+// ---- updates from followed people
+
+export type UpdateRow = { id: number; account_handle: string; date: string; source: string; text: string; url: string };
+
+/** Returns false when the same post is already stored. */
+export function insertUpdate(
+  db: DB,
+  u: { account_handle: string; date: string; source: string; text: string; url: string; run_id: number; now: string },
+): boolean {
+  const res = db
+    .prepare(
+      `INSERT INTO person_updates (account_handle, date, source, text, url, run_id, created_at)
+       VALUES (@account_handle, @date, @source, @text, @url, @run_id, @now)
+       ON CONFLICT (url) DO NOTHING`,
+    )
+    .run(u);
+  return res.changes > 0;
+}
+
+/** Newest first, only for people still on the watch list. */
+export function listUpdates(db: DB, since: string): UpdateRow[] {
+  return db
+    .prepare(
+      `SELECT u.id, u.account_handle, u.date, u.source, u.text, u.url FROM person_updates u
+       JOIN accounts a ON a.handle = u.account_handle AND a.active = 1
+       WHERE u.date >= ? ORDER BY u.date DESC, u.id DESC`,
+    )
+    .all(since) as UpdateRow[];
+}

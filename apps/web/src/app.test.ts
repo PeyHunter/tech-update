@@ -329,4 +329,44 @@ describe("backup", () => {
   it("fails when the database is missing", async () => {
     await expect(runBackup({ dataDir: mkdtempSync(join(tmpdir(), "tu-empty-")), backupDir: mkdtempSync(join(tmpdir(), "tu-bak-")) })).rejects.toThrow();
   });
+
+  it("shows updates from followed people at the top, once each, and tells the researcher about them", async () => {
+    const { db, pub, internal } = setup();
+    const u = (over: Record<string, unknown> = {}) => ({
+      account_handle: "mattpocockuk",
+      date: daysAgo(1),
+      source: "x",
+      text: "Matt shared a new free lesson on writing skills for coding agents.",
+      url: "https://x.com/mattpocockuk/status/1",
+      ...over,
+    });
+    const first = ingest(db, {
+      ...result([]),
+      updates: [
+        u(),
+        u({ account_handle: "theo", text: "Theo posted a video about `t3 code`.", url: "https://youtube.com/watch?v=abc" }),
+        u({ account_handle: "nobody", url: "https://x.com/nobody/status/9" }),
+      ],
+    });
+    expect(first.ok && first.response.updates).toBe(2);
+    const again = ingest(db, { ...result([]), updates: [u()] });
+    expect(again.ok && again.response.updates).toBe(0);
+
+    const html = await (await pub.request("/")).text();
+    expect(html).toContain("From the people you follow");
+    expect(html.indexOf("From the people you follow")).toBeLessThan(html.indexOf('id="brief-head"'));
+    expect(html).toContain("Matt shared a new free lesson");
+    expect(html).toContain("<code>t3 code</code>");
+    expect(html).not.toContain("nobody");
+
+    const state = (await (await internal.request("/api/internal/state", { headers: { authorization: `Bearer ${INGEST}` } })).json()) as {
+      recent_updates: { url: string }[];
+    };
+    expect(state.recent_updates.map((r) => r.url)).toContain("https://x.com/mattpocockuk/status/1");
+  });
+
+  it("shows an empty people section before the first updates", async () => {
+    const { pub } = setup();
+    expect(await (await pub.request("/")).text()).toContain("Nothing from them in the last 7 days.");
+  });
 });

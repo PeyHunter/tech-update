@@ -1,5 +1,5 @@
-import { Brief, Days, Heat, ItemBody, KindLabel } from "./components.js";
-import { formatDuration, formatLongDay, formatMonth, formatShortDateTime, initials } from "./format.js";
+import { Brief, Days, Heat, ItemBody, KindLabel, inlineCode } from "./components.js";
+import { formatDay, formatDuration, formatLongDay, formatMonth, formatShortDateTime, initials, sourceLabel } from "./format.js";
 import { Page } from "./layout.js";
 import type {
   AccountView,
@@ -77,6 +77,51 @@ function Empty({ title, children }: { title: string; children?: unknown }) {
   );
 }
 
+function Following({ people }: { people: HomeModel["following"] }) {
+  return (
+    <section class="following" aria-labelledby="following-head">
+      <div class="following-head">
+        <h2 id="following-head">From the people you follow</h2>
+        <p>What they posted, shipped or said in the last 7 days. Checked every night.</p>
+      </div>
+      {people.length > 0 ? (
+        <ul class="people">
+          {people.map((p) => (
+            <li class="person">
+              <p class="person-name">
+                <span class="badge" aria-hidden="true">
+                  {initials(p.name, p.handle)}
+                </span>
+                <a href={`/?by=${p.handle}`}>{p.name}</a>
+              </p>
+              <ul class="person-updates">
+                {p.updates.map((u) => {
+                  const { dow, dm } = formatDay(u.date);
+                  return (
+                    <li>
+                      <p>{inlineCode(u.text)}</p>
+                      <p class="update-meta">
+                        <time datetime={u.date}>
+                          {dow} {dm}
+                        </time>
+                        <a href={u.url}>Open on {sourceLabel(u.source)}</a>
+                      </p>
+                    </li>
+                  );
+                })}
+              </ul>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <Empty title="Nothing from them in the last 7 days.">
+          Their posts show up here after the nightly check, or press Refresh to look now.
+        </Empty>
+      )}
+    </section>
+  );
+}
+
 const doc = (el: unknown): string => `<!doctype html>${String(el)}`;
 
 export function renderHome(m: HomeModel): string {
@@ -84,6 +129,7 @@ export function renderHome(m: HomeModel): string {
   const person = m.people.find((p) => p.handle === m.filter.by);
   return doc(
     <Page {...layout(m)}>
+      <Following people={m.following} />
       <Brief brief={m.brief} />
       <section class="feed" aria-labelledby="feed-head">
         <div class="feed-head">

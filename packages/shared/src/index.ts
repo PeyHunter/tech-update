@@ -65,6 +65,15 @@ export const briefSchema = z.object({
   points: z.array(briefPointSchema).min(5).max(7),
 });
 
+/** Something one followed person posted, shipped or said, in one or two plain sentences. */
+export const updateSchema = z.object({
+  account_handle: handle,
+  date: z.iso.date({ error: "must be a date YYYY-MM-DD" }),
+  source: z.enum(SOURCES),
+  text: text(280),
+  url: httpsUrl,
+});
+
 export const resultFileSchema = z.object({
   run: z.object({
     started_at: z.iso.datetime({ offset: true, error: "must be an ISO datetime" }),
@@ -81,12 +90,14 @@ export const resultFileSchema = z.object({
     });
   }),
   brief: briefSchema.nullable(),
+  updates: z.array(updateSchema).max(60).default([]),
   rejected: z.array(z.object({ title: z.string(), reason: z.string() })).default([]),
 });
 
 export type ResultFile = z.infer<typeof resultFileSchema>;
 export type Item = z.infer<typeof itemSchema>;
 export type Link = z.infer<typeof linkSchema>;
+export type Update = z.infer<typeof updateSchema>;
 export type Mention = z.infer<typeof mentionSchema>;
 export type Brief = z.infer<typeof briefSchema>;
 export type BriefPoint = z.infer<typeof briefPointSchema>;
@@ -130,6 +141,8 @@ export type StateResponse = {
   items: { slug: string; title: string; date: string; urls: string[] }[];
   accounts: { handle: string; name: string; description: string; priority: "high" | "normal" }[];
   repos: WatchedRepo[];
+  /** People updates already on the site from the last 7 days, so the researcher does not repeat them. */
+  recent_updates: { account_handle: string; date: string; url: string }[];
 };
 
 /** GitHub places the researcher checks every run, next to the X watch list. `check` is a GitHub API URL it can WebFetch. */
@@ -164,5 +177,5 @@ export const WATCHED_REPOS: WatchedRepo[] = [
     check: "https://api.github.com/users/poteto/repos?sort=pushed&per_page=15",
   },
 ];
-export type IngestResponse = { run_id: number; added: number; updated: number; rejected: number };
+export type IngestResponse = { run_id: number; added: number; updated: number; rejected: number; updates: number };
 export type FailedRunRequest = { started_at: string; backend: string; error: string };

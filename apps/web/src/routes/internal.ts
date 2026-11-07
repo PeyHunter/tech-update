@@ -6,7 +6,7 @@ import type { Deps } from "../server.js";
 import { bearer } from "../auth.js";
 import * as repo from "../db/repo.js";
 import { ingest, recordFailedRun } from "../ingest.js";
-import { windowStart } from "../time.js";
+import { addDays, today, windowStart } from "../time.js";
 
 const failedRunBody = z.object({
   started_at: z.iso.datetime({ offset: true }),
@@ -25,6 +25,9 @@ export function internalRoutes({ db, config }: Deps): Hono {
       items: repo.stateItems(db, windowStart()),
       accounts: repo.listAccounts(db).map(({ handle, name, description, priority }) => ({ handle, name, description, priority })),
       repos: WATCHED_REPOS,
+      recent_updates: repo
+        .listUpdates(db, addDays(today(), -7))
+        .map(({ account_handle, date, url }) => ({ account_handle, date, url })),
     };
     return c.json(state);
   });

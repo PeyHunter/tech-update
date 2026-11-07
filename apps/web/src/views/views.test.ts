@@ -34,6 +34,7 @@ const item: ItemView = {
 const home = (over: Partial<HomeModel> = {}): string =>
   renderHome({
     ...layout,
+    following: [],
     brief: null,
     days: [{ date: item.date, items: [item] }],
     filter: { kind: "all", by: null },

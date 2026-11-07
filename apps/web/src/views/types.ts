@@ -33,7 +33,13 @@ export type RunView = {
 };
 export type AccountView = { handle: string; name: string; description: string; priority: "high" | "normal" };
 export type Layout = { title: string; lastUpdated: string | null; path: string };
+export type PersonUpdates = {
+  handle: string;
+  name: string;
+  updates: { date: string; source: Source; text: string; url: string }[];
+};
 export type HomeModel = Layout & {
+  following: PersonUpdates[];
   brief: BriefView | null;
   days: { date: string; items: ItemView[] }[];
   filter: { kind: "all" | "news" | "try"; by: string | null };
