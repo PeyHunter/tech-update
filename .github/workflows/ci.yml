@@ -75,7 +75,10 @@ jobs:
       group: deploy
       cancel-in-progress: false
     steps:
+      # Start from the newest main, not this run's commit: another deploy commit may have landed since.
       - uses: actions/checkout@v7
+        with:
+          ref: main
       - name: Point deploy/ at the new images
         run: |
           tag="sha-${GITHUB_SHA::7}"
