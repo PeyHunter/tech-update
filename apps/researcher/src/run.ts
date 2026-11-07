@@ -138,7 +138,7 @@ export async function main(argv: string[], deps: Deps): Promise<number> {
       return 1;
     }
     const out = (await res.json()) as IngestResponse;
-    log(`ingested run ${out.run_id}: ${out.added} added, ${out.updated} updated, ${out.rejected} rejected`);
+    log(`ingested run ${out.run_id}: ${out.added} added, ${out.updated} updated, ${out.rejected} rejected, ${out.updates ?? 0} people updates`);
     return 0;
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);

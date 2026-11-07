@@ -1,5 +1,5 @@
-import { Brief, Days, Heat, ItemBody, KindLabel } from "./components.js";
-import { formatDuration, formatLongDay, formatMonth, formatShortDateTime, initials } from "./format.js";
+import { Brief, Days, Heat, ItemBody, KindLabel, inlineCode } from "./components.js";
+import { formatDay, formatDuration, formatLongDay, formatMonth, formatShortDateTime, initials, sourceLabel } from "./format.js";
 import { Page } from "./layout.js";
 import type {
   AccountView,
@@ -77,6 +77,51 @@ function Empty({ title, children }: { title: string; children?: unknown }) {
   );
 }
 
+function Following({ people }: { people: HomeModel["following"] }) {
+  return (
+    <section class="following" aria-labelledby="following-head">
+      <div class="following-head">
+        <h2 id="following-head">From the people you follow</h2>
+        <p>What they posted, shipped or said in the last 7 days. Checked every night.</p>
+      </div>
+      {people.length > 0 ? (
+        <ul class="people">
+          {people.map((p) => (
+            <li class="person">
+              <p class="person-name">
+                <span class="badge" aria-hidden="true">
+                  {initials(p.name, p.handle)}
+                </span>
+                <a href={`/?by=${p.handle}`}>{p.name}</a>
+              </p>
+              <ul class="person-updates">
+                {p.updates.map((u) => {
+                  const { dow, dm } = formatDay(u.date);
+                  return (
+                    <li>
+                      <p>{inlineCode(u.text)}</p>
+                      <p class="update-meta">
+                        <time datetime={u.date}>
+                          {dow} {dm}
+                        </time>
+                        <a href={u.url}>Open on {sourceLabel(u.source)}</a>
+                      </p>
+                    </li>
+                  );
+                })}
+              </ul>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <Empty title="Nothing from them in the last 7 days.">
+          Their posts show up here after the nightly check, or press Refresh to look now.
+        </Empty>
+      )}
+    </section>
+  );
+}
+
 const doc = (el: unknown): string => `<!doctype html>${String(el)}`;
 
 export function renderHome(m: HomeModel): string {
@@ -84,6 +129,7 @@ export function renderHome(m: HomeModel): string {
   const person = m.people.find((p) => p.handle === m.filter.by);
   return doc(
     <Page {...layout(m)}>
+      <Following people={m.following} />
       <Brief brief={m.brief} />
       <section class="feed" aria-labelledby="feed-head">
         <div class="feed-head">
@@ -232,6 +278,20 @@ export function renderSources(m: SourcesModel): string {
         )}
       </section>
       <section class="prose-section">
+        <h2>GitHub</h2>
+        <p>New commits and releases here are checked every run. A notable change becomes a "Try it" item.</p>
+        <ul class="sources">
+          {m.repos.map((r) => (
+            <li>
+              <strong>
+                <a href={r.url}>{r.name}</a>
+              </strong>{" "}
+              {r.description}
+            </li>
+          ))}
+        </ul>
+      </section>
+      <section class="prose-section">
         <h2>How X is read</h2>
         <p>X cannot be read reliably for free, so the research uses the best source it has and records which one:</p>
         <ol class="steps">
@@ -260,11 +320,24 @@ export function renderSources(m: SourcesModel): string {
 
 const STATUS_LABEL: Record<string, string> = { ok: "OK", partial: "Partial", failed: "Failed" };
 
+const REFRESH_TEXT: Record<NonNullable<StatusModel["refresh"]>, { text: string; ok: boolean }> = {
+  started: { ok: true, text: "Refresh started. New items show up here and on the home page in about 15 minutes." },
+  running: { ok: true, text: "A research run is already going. Its items show up when it finishes." },
+  cooldown: { ok: true, text: "The site was updated or refreshed within the last hour, so it did not start another run. Try again later." },
+  unavailable: { ok: false, text: "Refresh is not set up on this server." },
+  failed: { ok: false, text: "Refresh could not start a run. The nightly run still happens at 03:30." },
+};
+
 export function renderStatus(m: StatusModel): string {
   const last = m.runs[0];
   return doc(
     <Page {...layout(m)}>
       <h1 class="page-title">Status</h1>
+      {m.refresh ? (
+        <p class={REFRESH_TEXT[m.refresh].ok ? "notice" : "notice notice-bad"} role="status">
+          {REFRESH_TEXT[m.refresh].text}
+        </p>
+      ) : null}
       <p class="lede">
         {last
           ? last.status === "failed"

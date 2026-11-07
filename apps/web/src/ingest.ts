@@ -175,6 +175,13 @@ export function ingest(db: DB, json: unknown, opts: { now?: Date } = {}): Ingest
       });
     }
 
+    // Updates from followed people: only known accounts, only the last 30 days, each post once.
+    let updates = 0;
+    for (const u of result.updates) {
+      if (u.date < cutoff || !repo.getAccount(db, u.account_handle)) continue;
+      if (repo.insertUpdate(db, { ...u, url: normalizeUrl(u.url), run_id: runId, now: nowIso })) updates++;
+    }
+
     const rejected = tooOld.length + result.rejected.length;
     repo.finishRun(db, runId, {
       status: tooOld.length > 0 ? "partial" : "ok",
@@ -184,7 +191,7 @@ export function ingest(db: DB, json: unknown, opts: { now?: Date } = {}): Ingest
       rejected,
       error: tooOld.length > 0 ? `older than 30 days: ${tooOld.join(", ")}` : null,
     });
-    return { run_id: runId, added: added.size, updated: updated.size, rejected };
+    return { run_id: runId, added: added.size, updated: updated.size, rejected, updates };
   })();
 
   return { ok: true, response };

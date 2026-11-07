@@ -83,4 +83,17 @@ INSERT INTO accounts (handle, name, description, priority) VALUES
   ('caseynewton',   'Casey Newton',    'Platformer, Machine Gods podcast', 'normal'),
   ('ezraklein',     'Ezra Klein',      'NYT, AI-policy and culture interviews', 'normal');
 `,
+  /* 002 updates from followed people */ `
+CREATE TABLE person_updates (
+  id             INTEGER PRIMARY KEY,
+  account_handle TEXT NOT NULL,
+  date           TEXT NOT NULL,
+  source         TEXT NOT NULL,
+  text           TEXT NOT NULL,
+  url            TEXT NOT NULL UNIQUE,
+  run_id         INTEGER REFERENCES runs(id),
+  created_at     TEXT NOT NULL
+);
+CREATE INDEX person_updates_date ON person_updates(date);
+`,
 ];

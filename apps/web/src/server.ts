@@ -3,6 +3,7 @@ import { fileURLToPath } from "node:url";
 import { Hono } from "hono";
 import type { Config } from "./config.js";
 import type { DB } from "./db/migrate.js";
+import type { Refresher } from "./refresh.js";
 import { adminRoutes } from "./routes/admin.js";
 import { apiRoutes } from "./routes/api.js";
 import { internalRoutes } from "./routes/internal.js";
@@ -13,6 +14,8 @@ export type Deps = {
   db: DB;
   config: Pick<Config, "ingestToken" | "adminToken" | "publicUrl">;
   stylesCss: string | null;
+  /** Starts a research run from the Refresh button. Missing outside the cluster. */
+  refresher?: Refresher;
 };
 
 /** dist/views/styles.css (copied by scripts/copy-assets.mjs) or, when running from src, src/views/styles.css. */

@@ -18,7 +18,9 @@ spec:
       labels:
         app: web
     spec:
-      automountServiceAccountToken: false
+      # The token lets the Refresh button start a researcher Job (rbac.yaml). It can do nothing else.
+      serviceAccountName: web
+      automountServiceAccountToken: true
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
@@ -44,6 +46,8 @@ spec:
               value: /data
             - name: PUBLIC_URL
               value: https://tech-update.peytonhunter.com
+            - name: REFRESH_COOLDOWN_MIN
+              value: "60"
             - name: INGEST_TOKEN
               valueFrom:
                 secretKeyRef:

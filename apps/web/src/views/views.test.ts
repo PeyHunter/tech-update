@@ -34,6 +34,7 @@ const item: ItemView = {
 const home = (over: Partial<HomeModel> = {}): string =>
   renderHome({
     ...layout,
+    following: [],
     brief: null,
     days: [{ date: item.date, items: [item] }],
     filter: { kind: "all", by: null },
@@ -76,8 +77,8 @@ describe("views", () => {
     expect(renderArchiveMonth({ ...layout, path: "/archive/2026-09", month: "2026-09", brief: null, days: [] })).toContain(
       "No items this month.",
     );
-    expect(renderStatus({ ...layout, path: "/status", runs: [] })).toContain("No runs yet.");
-    expect(renderSources({ ...layout, path: "/sources", accounts: [] })).toContain("The watch list is empty.");
+    expect(renderStatus({ ...layout, path: "/status", runs: [], refresh: null })).toContain("No runs yet.");
+    expect(renderSources({ ...layout, path: "/sources", accounts: [], repos: [] })).toContain("The watch list is empty.");
   });
 
   it("formats dates and times in Copenhagen", () => {
