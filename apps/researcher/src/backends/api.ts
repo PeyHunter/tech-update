@@ -32,9 +32,10 @@ export function createApiBackend(env: NodeJS.ProcessEnv): Backend {
       const client = new Anthropic({ apiKey: env.ANTHROPIC_API_KEY, timeout: 35 * 60 * 1000 });
       const system = promptFor(await readFile(promptPath, "utf8"), outDir);
       const state = await readFile(statePath, "utf8");
+      const feeds = await readFile(join(outDir, "feeds.json"), "utf8").catch(() => null);
 
       const messages: Anthropic.Beta.BetaMessageParam[] = [
-        { role: "user", content: `${API_NOTE}\n\nstate.json:\n\n\`\`\`json\n${state}\n\`\`\`` },
+        { role: "user", content: `${API_NOTE}\n\nstate.json:\n\n\`\`\`json\n${state}\n\`\`\`${feeds ? `\n\nfeeds.json:\n\n\`\`\`json\n${feeds}\n\`\`\`` : ""}` },
       ];
       let message: Anthropic.Beta.BetaMessage | undefined;
       let inputTokens = 0;

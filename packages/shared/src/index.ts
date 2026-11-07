@@ -2,6 +2,8 @@ import { z } from "zod";
 
 export const KINDS = ["news", "try"] as const;
 export const SOURCES = ["x", "hn", "github", "arxiv", "lab", "newsletter", "youtube"] as const;
+/** People updates may also come from a podcast; item mentions may not (the DB checks their source). */
+export const UPDATE_SOURCES = [...SOURCES, "podcast"] as const;
 export const SLUG_RE = /^\d{4}-\d{2}-\d{2}-[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 const text = (max: number) => z.string().trim().min(1).max(max);
@@ -85,7 +87,7 @@ export const briefSchema = z.object({
 export const updateSchema = z.object({
   account_handle: handle,
   date: z.iso.date({ error: "must be a date YYYY-MM-DD" }),
-  source: z.enum(SOURCES),
+  source: z.enum(UPDATE_SOURCES),
   text: text(280),
   url: httpsUrl,
 });

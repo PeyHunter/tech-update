@@ -59,5 +59,6 @@ const SOURCE_LABELS: Record<string, string> = {
   lab: "Lab",
   newsletter: "Newsletter",
   youtube: "YouTube",
+  podcast: "the podcast",
 };
 export const sourceLabel = (s: string): string => SOURCE_LABELS[s] ?? s;

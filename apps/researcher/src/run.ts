@@ -2,6 +2,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { parseResultFile, type FailedRunRequest, type IngestResponse, type StateResponse } from "@tech-update/shared";
+import { collectFeeds } from "./feeds.js";
 import { backendName, createBackend, type Backend, type BackendName } from "./backends/index.js";
 
 const DAY_MS = 86_400_000;
@@ -95,6 +96,19 @@ export async function main(argv: string[], deps: Deps): Promise<number> {
         statePath,
         JSON.stringify({ ...state, today: copenhagenToday(now), lookback_days: lookbackDays(state.last_success_at, now) }, null, 2),
       );
+
+      // People's posts from X and their own feeds. Optional: on any failure the model falls back to web search.
+      const lookback = lookbackDays(state.last_success_at, now);
+      const since = new Date(now.getTime() - Math.max(2, lookback) * DAY_MS);
+      try {
+        const feeds = await collectFeeds(state.accounts ?? [], since, now, { fetch: deps.fetch });
+        await writeFile(join(outDir, "feeds.json"), JSON.stringify(feeds, null, 2));
+        const n = feeds.people.reduce((sum, p) => sum + p.posts.length, 0);
+        const failed = feeds.people.flatMap((p) => p.errors.map((e) => `${p.handle}: ${e}`));
+        log(`feeds: ${n} posts from ${feeds.people.length} people${failed.length ? `; failed: ${failed.join("; ")}` : ""}`);
+      } catch (err) {
+        log(`feeds: skipped (${(err as Error).message})`);
+      }
 
       const { notes } = await (deps.backend ?? ((n) => createBackend(n, env)))(name).run({
         outDir,

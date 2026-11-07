@@ -6,7 +6,7 @@ Your job: find what happened in AI since the last run, check it against primary 
 
 ## 1. Read the state first
 
-Read `/out/state.json` before anything else. It contains:
+Read `/out/state.json` before anything else, then `/out/feeds.json` if it exists. state.json contains:
 
 - `today`: today's date (YYYY-MM-DD, Europe/Copenhagen).
 - `lookback_days`: how far back to look (1 to 3 normally, 30 on the first run).
@@ -15,6 +15,8 @@ Read `/out/state.json` before anything else. It contains:
 - `accounts`: the active X watch list, each with `handle`, `name`, `description` and `priority` (`high` or `normal`).
 - `recent_updates`: people updates already on the site from the last 7 days (`account_handle`, `date`, `url`). Never send one of these again.
 - `repos`: GitHub places to watch, each with `name`, `owner` (an X handle from `accounts`), `description`, `url` and `check` (a GitHub API URL).
+
+`/out/feeds.json` holds what each followed person posted recently, collected by the wrapper just before you started: their X posts (real and fresh, with likes and views), YouTube videos, podcast episodes, newsletter posts and GitHub activity. It has `people`, each with `handle`, `name`, `posts` (`source`, `feed`, `date`, `url`, `text`, and for X `likes`, `views`, `repost_of`, `reply_to`, `quote`) and `errors` (feeds that failed tonight). Every `url` in it is real, so you may use it as is.
 
 Look for things that happened from `today` minus `lookback_days` up to `today`. Never include anything dated more than 30 days before `today`.
 
@@ -50,8 +52,9 @@ Watch-list rule: if at least one account from `state.json` posted about the item
 
 X is hard to read for free, so use these in order:
 
-1. For every account in `state.json` `accounts`, run a web search like `site:x.com/<handle>` (add a topic word or the month if results are stale). Check `high` priority accounts first and most carefully. Open promising results with WebFetch when you can.
-2. Read the same people where they publish outside X. Examples: Theo's YouTube channel, Matt Pocock's AI Hero newsletter and blog, the Nerd Snipe and Machine Gods podcasts, Platformer, the opencode GitHub repo. Use each account's `description` to find its channels.
+1. `/out/feeds.json` first. It already has the recent X posts of every account. Posts with high `views` or `likes` are what people are talking about, and they are your best signal for heat.
+2. Only for an account whose `errors` mention X, or when feeds.json is missing: for every such account in `state.json` `accounts`, run a web search like `site:x.com/<handle>` (add a topic word or the month if results are stale). Check `high` priority accounts first and most carefully. Open promising results with WebFetch when you can.
+3. Read the same people where they publish outside X (feeds.json already has their YouTube, podcasts, newsletters and GitHub). Examples: Theo's YouTube channel, Matt Pocock's AI Hero newsletter and blog, the Nerd Snipe and Machine Gods podcasts, Platformer, the opencode GitHub repo. Use each account's `description` to find its channels.
 
 A post on X is a signal, not a source. Always follow it to the primary source.
 
@@ -59,11 +62,11 @@ A post on X is a signal, not a source. Always follow it to the primary source.
 
 The top of the site shows what each person in `state.json` `accounts` posted, shipped or said. This is what the owner reads first every morning, so do it for every account on every run.
 
-1. For each account, look for what they did from `today` minus `lookback_days` up to `today`. Use section 4 to find their X posts, and also check their own channels: YouTube videos, newsletters and blog posts, podcast episodes, and their GitHub (section 6).
+1. For each account, start with their `posts` in `/out/feeds.json`, then use section 4 and their own channels for anything missing. Look at what they did from `today` minus `lookback_days` up to `today`. A repost (`repost_of`) or quote counts only if you can say why they shared it. A short reply only counts if it says something new. Open a post's link when the text alone is unclear.
 2. Keep up to 3 updates per person, the most interesting first. Keep posts about AI, tech, coding, their products and their work. Skip personal life, jokes with no point, fights, and politics that are not about AI or tech.
 3. Each update is one or two sentences, at most 280 characters, in the simple language of section 10. Say what they said or made, and why someone might care. Write "Theo says the new Claude model is much faster in his app, but costs more", not "Theo posted about model latency".
 4. `url` must point to the post, video, article or commit itself. Use only a URL you saw in a search result or fetched. Never build an X status URL yourself.
-5. `date` is the day they posted it. `source` is where it is: `x`, `youtube`, `newsletter`, `github` or `lab`.
+5. `date` is the day they posted it. `source` is where it is: `x`, `youtube`, `podcast`, `newsletter`, `github` or `lab` (the `source` field in feeds.json).
 6. Skip anything whose `url` is already in `recent_updates`. If a person did nothing new, add nothing for them. That is fine.
 7. If an update is also big news, it can be an item too. Then add a mention for that person on the item as usual.
 
