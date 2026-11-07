@@ -1,0 +1,80 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap");
+
+/* Changelog: the month read like release notes. Days are a real sequence, so one timeline joins them;
+   dates, kinds and commands are set in mono like a git log. Follows the reader's light or dark setting. */
+:root {
+  color-scheme: light dark;
+  --paper: light-dark(oklch(96.6% 0.006 160), oklch(18% 0.012 180));
+  --raised: light-dark(oklch(99.5% 0.003 160), oklch(22% 0.014 180));
+  --ink: light-dark(oklch(23% 0.02 180), oklch(93% 0.01 170));
+  --muted: light-dark(oklch(47% 0.02 180), oklch(70% 0.02 175));
+  --rule: light-dark(oklch(88% 0.012 170), oklch(31% 0.016 180));
+  --chip: light-dark(oklch(92.5% 0.014 170), oklch(26% 0.016 180));
+  --accent: light-dark(oklch(44% 0.09 185), oklch(78% 0.11 180));
+  --link: var(--accent);
+  --focus: var(--accent);
+  --button-bg: var(--ink);
+  --button-ink: var(--paper);
+  --heat-off: light-dark(oklch(87% 0.012 170), oklch(33% 0.016 180));
+  --heat-2: var(--accent);
+  --heat-3: var(--accent);
+  --heat-4: var(--accent);
+  --heat-5: var(--accent);
+  --ok: light-dark(oklch(48% 0.12 150), oklch(78% 0.14 150));
+  --partial: light-dark(oklch(58% 0.12 75), oklch(82% 0.12 80));
+  --failed: light-dark(oklch(52% 0.19 27), oklch(74% 0.15 25));
+
+  --font-body: "IBM Plex Sans", system-ui, sans-serif;
+  --font-display: var(--font-body);
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-ui: var(--font-body);
+  --display-weight: 600;
+  --display-tracking: -0.02em;
+  --leading: 1.6;
+
+  --size-narrow: 1;
+  --size-wide: 1.0625;
+  --ratio-narrow: 1.2;
+  --ratio-wide: 1.25;
+  --content: 60rem;
+  --radius: 0.25rem;
+  --radius-pill: 0.25rem;
+  --code-bg: var(--chip);
+}
+
+.brand { font-family: var(--font-mono); font-weight: 700; letter-spacing: -0.02em; }
+.brand a::before { content: "$ "; color: var(--accent); }
+.updated, .brief-period, .crumb, .count, .runs td:first-child { font-family: var(--font-mono); }
+.brief-period { color: var(--accent); }
+.points > li::before { font: 500 var(--step-0) / 1.5 var(--font-mono); color: var(--accent); }
+
+/* The timeline */
+.days { gap: 0; border-inline-start: 2px solid var(--rule); margin-inline-start: 0.4rem; }
+.day { position: relative; padding-inline-start: var(--space-m); padding-block-end: var(--space-l); flex-direction: column; flex-wrap: nowrap; gap: var(--space-s); }
+.day::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: calc(-0.4rem - 1px);
+  inset-block-start: 0.35rem;
+  inline-size: 0.8rem;
+  block-size: 0.8rem;
+  border-radius: 50%;
+  background: var(--paper);
+  border: 2px solid var(--accent);
+}
+.day:first-child::before { background: var(--accent); }
+.day-head { position: static; flex-basis: auto; font: 500 var(--step--1) / 1.6 var(--font-mono); }
+.day-head .dm { color: var(--ink); font-weight: 700; }
+.day-items { min-inline-size: 0; max-inline-size: 46rem; }
+
+.kind { font: 500 var(--step--1) / 1 var(--font-mono); padding-inline: 0.45rem; padding-block: 0.3rem; border: 1px solid currentColor; border-radius: var(--radius); }
+.kind-try { background: color-mix(in oklch, var(--accent) 12%, transparent); }
+
+/* Heat as five squares, filled up to the heat */
+.heat { align-items: center; gap: 3px; block-size: auto; }
+.heat i:nth-child(n) { inline-size: 0.5rem; block-size: 0.5rem; border-radius: 1px; }
+
+.how { background: var(--raised); border: 1px solid var(--rule); border-inline-start: 3px solid var(--accent); border-radius: var(--radius); }
+.how p { font-family: var(--font-mono); font-size: var(--step--1); }
+.how code { background: none; padding: 0; }
+.kind-news { color: var(--muted); }

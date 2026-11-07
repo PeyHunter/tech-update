@@ -1,0 +1,72 @@
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=JetBrains+Mono:wght@400;500&display=swap");
+
+/* Signal: dark, and loud where it matters. The hotter a story, the bigger and brighter its title,
+   so the eye lands on what everyone is talking about. Heat runs violet → pink → amber. */
+:root {
+  color-scheme: dark;
+  --paper: oklch(19% 0.045 288);
+  --raised: oklch(23% 0.05 288);
+  --ink: oklch(95% 0.015 300);
+  --muted: oklch(74% 0.04 295);
+  --rule: oklch(31% 0.05 288);
+  --chip: oklch(27% 0.055 288);
+  --accent: oklch(80% 0.13 340);
+  --link: oklch(84% 0.1 320);
+  --focus: oklch(86% 0.14 75);
+  --button-bg: oklch(86% 0.14 75);
+  --button-ink: oklch(20% 0.04 288);
+  --heat-off: oklch(32% 0.05 288);
+  --heat-2: oklch(66% 0.16 295);
+  --heat-3: oklch(71% 0.18 330);
+  --heat-4: oklch(75% 0.17 15);
+  --heat-5: oklch(86% 0.14 75);
+  --ok: oklch(80% 0.14 155);
+  --partial: oklch(84% 0.12 80);
+  --failed: oklch(72% 0.17 20);
+
+  --font-body: "Literata", Georgia, serif;
+  --font-display: "Bricolage Grotesque", system-ui, sans-serif;
+  --font-ui: var(--font-display);
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --display-weight: 800;
+  --display-tracking: -0.03em;
+  --leading: 1.7;
+
+  --size-narrow: 1.0625;
+  --size-wide: 1.125;
+  --ratio-narrow: 1.22;
+  --ratio-wide: 1.3;
+  --content: 58rem;
+  --radius: 0.6rem;
+}
+
+.brand { font-weight: 800; font-stretch: 80%; letter-spacing: -0.03em; }
+.brand a { color: var(--heat-5); }
+
+/* The brief headline takes the breakout width and the full display treatment */
+main > .brief { padding-block-end: var(--space-section); border-block-end: 1px solid var(--rule); margin-block-end: var(--space-l); }
+.brief-headline { font-size: calc(var(--step-4) * 1.15); font-stretch: 82%; max-inline-size: 18ch; line-height: 1; }
+.brief-period { color: var(--accent); font-family: var(--font-display); font-weight: 600; }
+.points { grid-template-columns: repeat(auto-fill, minmax(min(100%, 24rem), 1fr)); column-gap: var(--space-l); }
+.points > li::before { color: var(--heat-3); font-stretch: 80%; font-size: var(--step-3); }
+
+/* Heat sets the volume of each item */
+.item { padding-inline-start: 1rem; border-inline-start: 3px solid var(--heat-off); border-block-start: 0; margin-block-end: var(--space-s); padding-block: 0.25rem; }
+.day-items > .item:first-child { padding-block-start: 0.25rem; }
+.item:has(.heat-2) { border-inline-start-color: var(--heat-2); }
+.item:has(.heat-3) { border-inline-start-color: var(--heat-3); }
+.item:has(.heat-4) { border-inline-start-color: var(--heat-4); }
+.item:has(.heat-5) { border-inline-start-color: var(--heat-5); }
+.item:has(.heat-2) .item-title { font-size: var(--step-1); font-weight: 600; }
+.item:has(.heat-3) .item-title { font-size: var(--step-2); }
+.item:has(.heat-4) .item-title { font-size: var(--step-3); font-stretch: 88%; }
+.item:has(.heat-5) .item-title { font-size: var(--step-4); font-stretch: 80%; line-height: 1.02; letter-spacing: -0.03em; }
+.item:has(.heat-5) .item-title a { color: var(--heat-5); }
+
+.kind { color: var(--muted); font-weight: 600; }
+.kind-try { color: var(--accent); }
+.day-head .dm { font: 800 var(--step-2) / 1 var(--font-display); font-stretch: 80%; color: var(--ink); }
+.day-head time { flex-direction: column; }
+.how { background: var(--raised); border-inline-start-color: var(--accent); }
+.chip[aria-current="true"] { background: var(--heat-5); border-color: var(--heat-5); color: var(--button-ink); }
+.nav a[aria-current="page"] { border-block-end-color: var(--heat-5); }

@@ -1,0 +1,88 @@
+@import url("https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Atkinson+Hyperlegible+Mono:wght@400;600&display=swap");
+
+/* Clear: light, modern, easy to read. One typeface built for legibility, a calm single column,
+   and one bold move: the month's brief sits on its own raised sheet. */
+:root {
+  color-scheme: light;
+  --paper: oklch(98.6% 0.004 265);
+  --raised: oklch(100% 0 none);
+  --ink: oklch(22% 0.02 268);
+  --muted: oklch(47% 0.022 268);
+  --rule: oklch(91.5% 0.008 268);
+  --chip: oklch(95.5% 0.01 268);
+  --accent: oklch(50% 0.19 268);
+  --link: var(--accent);
+  --focus: var(--accent);
+  --button-bg: var(--accent);
+  --button-ink: oklch(100% 0 none);
+  --heat-off: oklch(90% 0.008 268);
+  --heat-2: oklch(72% 0.13 85);
+  --heat-3: oklch(68% 0.16 60);
+  --heat-4: oklch(62% 0.19 40);
+  --heat-5: oklch(56% 0.21 27);
+  --ok: oklch(52% 0.13 150);
+  --partial: oklch(60% 0.13 75);
+  --failed: oklch(54% 0.2 27);
+
+  --font-body: "Atkinson Hyperlegible Next", system-ui, sans-serif;
+  --font-display: var(--font-body);
+  --font-mono: "Atkinson Hyperlegible Mono", ui-monospace, monospace;
+  --display-weight: 800;
+  --display-tracking: -0.025em;
+  --leading: 1.65;
+
+  --size-narrow: 1.0625;
+  --size-wide: 1.1875;
+  --ratio-narrow: 1.2;
+  --ratio-wide: 1.25;
+  --content: 54rem;
+  --radius: 0.75rem;
+}
+
+.masthead { background: var(--raised); border-block-end: 1px solid var(--rule); }
+.brand a::before {
+  content: "";
+  display: inline-block;
+  inline-size: 0.6em;
+  block-size: 0.6em;
+  margin-inline-end: 0.4em;
+  border-radius: 50%;
+  background: var(--accent);
+  vertical-align: 0.05em;
+}
+
+/* The brief: the one raised sheet on the page */
+.brief {
+  --pad: clamp(1.25rem, 0.5rem + 3vw, 2.75rem);
+  background: var(--raised);
+  border: 1px solid var(--rule);
+  border-radius: calc(var(--radius) * 2);
+  padding: var(--pad);
+  margin-block-end: var(--space-section);
+  box-shadow: 0 1px 2px oklch(22% 0.02 268 / 0.04), 0 12px 32px -12px oklch(22% 0.02 268 / 0.12);
+}
+.brief-period {
+  align-self: start;
+  padding-inline: 0.7rem;
+  padding-block: 0.3rem;
+  border-radius: 999px;
+  background: var(--chip);
+  color: var(--accent);
+  font-weight: 700;
+}
+.points > li::before {
+  inline-size: 1.75rem;
+  block-size: 1.75rem;
+  display: grid;
+  place-items: center;
+  justify-self: end;
+  border-radius: 50%;
+  background: color-mix(in oklch, var(--accent) 12%, transparent);
+  color: var(--accent);
+  font-size: var(--step--1);
+  font-weight: 800;
+}
+
+.feed-head h2 { font-size: var(--step-2); }
+.day-head .dm { font-size: var(--step-1); font-weight: 800; }
+.how { background: color-mix(in oklch, var(--accent) 6%, var(--raised)); }
