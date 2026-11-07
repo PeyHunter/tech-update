@@ -99,6 +99,9 @@ export function ingest(db: DB, json: unknown, opts: { now?: Date } = {}): Ingest
     });
     const links = new UrlIndex(repo.allLinkUrls(db));
     const mentions = new UrlIndex(repo.allMentionUrls(db));
+    // Only slug and primary URL identify an item. Mentions never do: one HN thread or
+    // listing page can cover many stories, and matching on it merged distinct items.
+    const primaries = new UrlIndex(repo.allPrimaryLinkUrls(db));
     const storedSlug = new Map<string, string>();
     const added = new Set<number>();
     const updated = new Set<number>();
@@ -109,10 +112,8 @@ export function ingest(db: DB, json: unknown, opts: { now?: Date } = {}): Ingest
         tooOld.push(item.title);
         continue;
       }
-      const existing =
-        repo.getItemBySlug(db, item.slug) ??
-        lookup(db, links.find(item.links.map((l) => l.url))) ??
-        lookup(db, mentions.find(item.mentions.map((m) => m.url)));
+      const primaryUrls = item.links.filter((l) => l.is_primary).map((l) => l.url);
+      const existing = repo.getItemBySlug(db, item.slug) ?? lookup(db, primaries.find(primaryUrls));
 
       const fields = {
         kind: item.kind,
@@ -134,6 +135,8 @@ export function ingest(db: DB, json: unknown, opts: { now?: Date } = {}): Ingest
         added.add(id);
         storedSlug.set(item.slug, item.slug);
       }
+      // Two slugs in one payload with the same primary URL are the same story told twice.
+      for (const url of primaryUrls) primaries.add(id, url);
 
       let hasPrimary = existing ? repo.itemHasPrimaryLink(db, id) : false;
       for (const link of item.links) {
