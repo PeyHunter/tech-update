@@ -43,6 +43,21 @@ const home = (over: Partial<HomeModel> = {}): string =>
   });
 
 describe("views", () => {
+  it("puts Lauren and Matt first and folds everyone else", () => {
+    const person = (handle: string, name: string) => ({
+      handle,
+      name,
+      updates: [{ date: "2026-11-14", source: "x" as const, text: `${name} said hi`, url: `https://x.com/${handle}/status/1` }],
+    });
+    const html = home({ following: [person("theo", "Theo"), person("mattpocockuk", "Matt Pocock"), person("poteto", "Lauren")] });
+    const fold = html.indexOf('<details class="more-people"');
+    expect(html.indexOf("Lauren said hi")).toBeLessThan(html.indexOf("Matt Pocock said hi"));
+    expect(html.indexOf("Matt Pocock said hi")).toBeLessThan(fold);
+    expect(html.indexOf("Theo said hi")).toBeGreaterThan(fold);
+    expect(html).toContain("More people (1)");
+    expect(html).not.toMatch(/<details class="more-people" open/);
+  });
+
   it("escapes titles and text", () => {
     const html = renderItem({ ...layout, title: item.title, path: `/item/${item.slug}`, item });
     expect(html.startsWith("<!doctype html>")).toBe(true);
