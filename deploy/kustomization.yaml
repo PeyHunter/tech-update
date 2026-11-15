@@ -17,6 +17,6 @@ resources:
 # CI rewrites each newTag to the sha-<commit> it just pushed.
 images:
   - name: ghcr.io/peyhunter/tech-update-web
-    newTag: "sha-41b279e"
+    newTag: "sha-8c687ea"
   - name: ghcr.io/peyhunter/tech-update-researcher
-    newTag: "sha-41b279e"
+    newTag: "sha-8c687ea"
