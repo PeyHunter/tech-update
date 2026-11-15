@@ -530,4 +530,12 @@ main > .brief { padding-block-end: var(--space-section); border-block-end: 1px s
 .person-updates { display: flex; flex-direction: column; gap: 0.75rem; }
 .person-updates li { display: flex; flex-direction: column; gap: 0.2rem; font-size: var(--step--1); line-height: 1.55; }
 .person-updates li + li { padding-block-start: 0.75rem; border-block-start: 1px solid var(--rule); }
+.more-people > summary {
+  cursor: pointer;
+  inline-size: fit-content;
+  padding-block: 0.5rem;
+  font: 700 var(--step-0) / 1.2 var(--font-display);
+  color: var(--ink);
+}
+.more-people[open] > summary { margin-block-end: var(--space-s); }
 .update-meta { display: flex; flex-wrap: wrap; gap: 0.25rem 0.75rem; color: var(--muted); font: 400 var(--step--1) / 1.4 var(--font-ui); }

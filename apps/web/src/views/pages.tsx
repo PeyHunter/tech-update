@@ -77,7 +77,41 @@ function Empty({ title, children }: { title: string; children?: unknown }) {
   );
 }
 
+/** Shown first, always open. Everyone else folds into "More people". */
+const FEATURED = ["poteto", "mattpocockuk"];
+
+function PersonCard({ p }: { p: HomeModel["following"][number] }) {
+  return (
+    <li class="person">
+      <p class="person-name">
+        <span class="badge" aria-hidden="true">
+          {initials(p.name, p.handle)}
+        </span>
+        <a href={`/?by=${p.handle}`}>{p.name}</a>
+      </p>
+      <ul class="person-updates">
+        {p.updates.map((u) => {
+          const { dow, dm } = formatDay(u.date);
+          return (
+            <li>
+              <p>{inlineCode(u.text)}</p>
+              <p class="update-meta">
+                <time datetime={u.date}>
+                  {dow} {dm}
+                </time>
+                <a href={u.url}>Open on {sourceLabel(u.source)}</a>
+              </p>
+            </li>
+          );
+        })}
+      </ul>
+    </li>
+  );
+}
+
 function Following({ people }: { people: HomeModel["following"] }) {
+  const featured = FEATURED.map((h) => people.find((p) => p.handle === h)).filter((p) => p !== undefined);
+  const others = people.filter((p) => !FEATURED.includes(p.handle));
   return (
     <section class="following" aria-labelledby="following-head">
       <div class="following-head">
@@ -85,34 +119,27 @@ function Following({ people }: { people: HomeModel["following"] }) {
         <p>What they posted, shipped or said in the last 7 days. Checked every night.</p>
       </div>
       {people.length > 0 ? (
-        <ul class="people">
-          {people.map((p) => (
-            <li class="person">
-              <p class="person-name">
-                <span class="badge" aria-hidden="true">
-                  {initials(p.name, p.handle)}
-                </span>
-                <a href={`/?by=${p.handle}`}>{p.name}</a>
-              </p>
-              <ul class="person-updates">
-                {p.updates.map((u) => {
-                  const { dow, dm } = formatDay(u.date);
-                  return (
-                    <li>
-                      <p>{inlineCode(u.text)}</p>
-                      <p class="update-meta">
-                        <time datetime={u.date}>
-                          {dow} {dm}
-                        </time>
-                        <a href={u.url}>Open on {sourceLabel(u.source)}</a>
-                      </p>
-                    </li>
-                  );
-                })}
+        <>
+          {featured.length > 0 ? (
+            <ul class="people">
+              {featured.map((p) => (
+                <PersonCard p={p} />
+              ))}
+            </ul>
+          ) : null}
+          {others.length > 0 ? (
+            <details class="more-people" open={featured.length === 0}>
+              <summary>
+                More people ({others.length})
+              </summary>
+              <ul class="people">
+                {others.map((p) => (
+                  <PersonCard p={p} />
+                ))}
               </ul>
-            </li>
-          ))}
-        </ul>
+            </details>
+          ) : null}
+        </>
       ) : (
         <Empty title="Nothing from them in the last 7 days.">
           Their posts show up here after the nightly check, or press Refresh to look now.

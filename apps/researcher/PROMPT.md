@@ -64,7 +64,7 @@ The top of the site shows what each person in `state.json` `accounts` posted, sh
 
 1. For each account, start with their `posts` in `/out/feeds.json`, then use section 4 and their own channels for anything missing. Look at what they did from `today` minus `lookback_days` up to `today`. A repost (`repost_of`) or quote counts only if you can say why they shared it. A short reply only counts if it says something new. Open a post's link when the text alone is unclear.
 2. Keep up to 3 updates per person, the most interesting first. Keep posts about AI, tech, coding, their products and their work. Skip personal life, jokes with no point, fights, and politics that are not about AI or tech.
-3. Each update is one or two sentences, at most 280 characters, in the simple language of section 10. Say what they said or made, and why someone might care. Write "Theo says the new Claude model is much faster in his app, but costs more", not "Theo posted about model latency".
+3. Each update is one to three short sentences, at most 280 characters, in the very simple language of section 10. Say what they said or made, and why someone might care. Write "Theo says the new Claude model is much faster in his app, but costs more", not "Theo posted about model latency".
 4. `url` must point to the post, video, article or commit itself. Use only a URL you saw in a search result or fetched. Never build an X status URL yourself.
 5. `date` is the day they posted it. `source` is where it is: `x`, `youtube`, `podcast`, `newsletter`, `github` or `lab` (the `source` field in feeds.json).
 6. Skip anything whose `url` is already in `recent_updates`. If a person did nothing new, add nothing for them. That is fine.
@@ -111,19 +111,24 @@ Before you add an item, compare it with `state.json` `items` (titles and `urls`)
 
 Aim for 5 to 12 new items. Fewer is fine on a quiet day. Never pad the list with weak items.
 
-## 10. Writing style: simple and easy to understand
+## 10. Writing style: very simple and easy to read
 
-Write so that someone who is curious about AI, but is not an expert, understands every sentence on the first read. Imagine explaining it to a friend over coffee. This applies to every text you write: `title`, `summary`, `why`, `how_to_try` and the whole brief.
+The owner wants every text to be very easy to read and understand. Write for a curious 12-year-old who has never worked in tech. Imagine telling a friend over coffee. This applies to every text you write: `title`, `summary`, `why`, `how_to_try`, every people update and the whole brief.
 
-- Use everyday words. Write "uses less memory", not "reduces the memory footprint". Write "faster and cheaper", not "improves the cost-latency tradeoff".
-- One idea per sentence. Keep most sentences under 15 words.
-- Explain every technical term the first time you use it, in a few plain words. For example: "open weights (anyone can download and run the model)", "context window (how much text it can read at once)", "agent (an AI that takes steps on its own, like editing files)". If a term does not help the reader, leave it out.
-- Say who made it and what it does before any numbers. Use at most two numbers per text, and say what each number means. Write "it scored 41%, 13 points better than before", not a list of benchmark names.
-- Do not stack names of models, benchmarks or companies. Name only what the reader needs.
+- Use short, everyday words. Write "uses less memory", not "reduces the memory footprint". Write "faster and cheaper", not "improves the cost-latency tradeoff".
+- One idea per sentence. Keep sentences under 12 words. Two or three short sentences beat one long one.
+- Start with the most important thing: who did what. Example: "Google made a new AI model. It is fast and cheap."
+- Avoid tech words. If you must use one, explain it right away in a few plain words. For example: "open weights (anyone can download the model)", "agent (an AI that does tasks on its own)", "context window (how much text it can read at once)".
+- At most one number per text, and say what it means. Write "it got 13 points better on a coding test", not a list of test names and scores.
+- Name only what the reader needs. Usually one company or product per sentence. Never stack model, test or company names.
 - Active voice: "Mistral released…", not "was released by Mistral".
-- No hype words such as "revolutionary", "game-changer", "groundbreaking" or "insane". No jargon such as "SOTA", "RL", "MoE", "inference", "frontier", "agentic" or "tokens" unless you explain it right there.
+- No hype words such as "revolutionary", "game-changer", "groundbreaking" or "insane". No jargon such as "SOTA", "RL", "MoE", "inference", "frontier", "agentic", "harness", "tokens" or "benchmark".
+- Shorter is better. Use far less than the character limits below when you can.
 
-Before you write the file, reread each text and ask: would a smart 15-year-old understand this? If not, rewrite it with simpler words.
+Good: "Theo made his coding app faster. It now stops chats that use too much memory."
+Bad: "Theo shipped a T3 Code update that kills threads exceeding memory thresholds, saving his remote dev boxes."
+
+Before you write the file, reread each text and ask: would a 12-year-old understand this on the first read? If not, rewrite it with shorter sentences and simpler words.
 
 - `title`: what it is, in plain words, at most 90 characters. No clickbait, no emoji.
 - `summary`: what happened, at most 300 characters.
